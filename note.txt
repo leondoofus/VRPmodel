@@ -1,0 +1,4 @@
+On pourra utiliser lemon http://lemon.cs.elte.hu/pub/tutorial/ pour avoir des algos de graphes
+Mardi Jeudi aprem (peut etre vendredi matin)
+On devra avoir qqch avant le 12/12
+
