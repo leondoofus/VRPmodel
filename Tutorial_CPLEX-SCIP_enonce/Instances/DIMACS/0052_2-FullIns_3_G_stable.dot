@@ -1,0 +1,255 @@
+graph G {
+  0[shape = octagon, color=white]
+  1[shape = octagon, color=white]
+  2[shape = octagon, color=white]
+  3[shape = octagon, color=white]
+  4[shape = octagon, color=white]
+  5[shape = octagon, color=white]
+  6[shape = octagon, color=white]
+  7[shape = octagon, color=white]
+  8[shape = octagon, color=white]
+  9[shape = octagon, color=white]
+  10[shape = octagon, color=white]
+  11[shape = octagon, color=white]
+  12[shape = octagon]
+  13[shape = octagon]
+  14[shape = octagon]
+  15[shape = octagon]
+  16[shape = octagon]
+  17[shape = octagon]
+  18[shape = octagon]
+  19[shape = octagon]
+  20[shape = octagon]
+  21[shape = octagon]
+  22[shape = octagon]
+  23[shape = octagon]
+  24[shape = octagon, color=white]
+  25[shape = octagon, color=white]
+  26[shape = octagon, color=white]
+  27[shape = octagon, color=white]
+  28[shape = octagon, color=white]
+  29[shape = octagon, color=white]
+  30[shape = octagon, color=white]
+  31[shape = octagon, color=white]
+  32[shape = octagon, color=white]
+  33[shape = octagon, color=white]
+  34[shape = octagon, color=white]
+  35[shape = octagon, color=white]
+  36[shape = octagon]
+  37[shape = octagon]
+  38[shape = octagon]
+  39[shape = octagon]
+  40[shape = octagon]
+  41[shape = octagon]
+  42[shape = octagon]
+  43[shape = octagon]
+  44[shape = octagon]
+  45[shape = octagon]
+  46[shape = octagon]
+  47[shape = octagon]
+  48[shape = octagon, color=white]
+  49[shape = octagon, color=white]
+  50[shape = octagon]
+  51[shape = octagon, color=white]
+  "0"--"1" [color=white];
+  "0"--"3" [color=white];
+  "0"--"13" [color=white];
+  "0"--"15" [color=white];
+  "1"--"2" [color=white];
+  "1"--"12" [color=white];
+  "1"--"14" [color=white];
+  "2"--"5" [color=white];
+  "2"--"9" [color=white];
+  "2"--"13" [color=white];
+  "2"--"17" [color=white];
+  "2"--"21" [color=white];
+  "3"--"4" [color=white];
+  "3"--"9" [color=white];
+  "3"--"12" [color=white];
+  "3"--"16" [color=white];
+  "3"--"21" [color=white];
+  "4"--"7" [color=white];
+  "4"--"10" [color=white];
+  "4"--"15" [color=white];
+  "4"--"19" [color=white];
+  "4"--"22" [color=white];
+  "5"--"6" [color=white];
+  "5"--"10" [color=white];
+  "5"--"14" [color=white];
+  "5"--"18" [color=white];
+  "5"--"22" [color=white];
+  "6"--"8" [color=white];
+  "6"--"11" [color=white];
+  "6"--"17" [color=white];
+  "6"--"20" [color=white];
+  "6"--"23" [color=white];
+  "7"--"8" [color=white];
+  "7"--"11" [color=white];
+  "7"--"16" [color=white];
+  "7"--"20" [color=white];
+  "7"--"23" [color=white];
+  "8"--"9" [color=white];
+  "8"--"10" [color=white];
+  "8"--"11" [color=white];
+  "8"--"18" [color=white];
+  "8"--"19" [color=white];
+  "8"--"21" [color=white];
+  "8"--"22" [color=white];
+  "8"--"23" [color=white];
+  "9"--"10" [color=white];
+  "9"--"11" [color=white];
+  "9"--"14" [color=white];
+  "9"--"15" [color=white];
+  "9"--"20" [color=white];
+  "9"--"22" [color=white];
+  "9"--"23" [color=white];
+  "10"--"11" [color=white];
+  "10"--"16" [color=white];
+  "10"--"17" [color=white];
+  "10"--"20" [color=white];
+  "10"--"21" [color=white];
+  "10"--"23" [color=white];
+  "11"--"18" [color=white];
+  "11"--"19" [color=white];
+  "11"--"20" [color=white];
+  "11"--"21" [color=white];
+  "11"--"22" [color=white];
+  "12"--"25" [color=white];
+  "12"--"27" [color=white];
+  "12"--"49" [color=white];
+  "13"--"24" [color=white];
+  "13"--"26" [color=white];
+  "13"--"49" [color=white];
+  "14"--"25" [color=white];
+  "14"--"29" [color=white];
+  "14"--"33" [color=white];
+  "14"--"49" [color=white];
+  "15"--"24" [color=white];
+  "15"--"28" [color=white];
+  "15"--"33" [color=white];
+  "15"--"49" [color=white];
+  "16"--"27" [color=white];
+  "16"--"31" [color=white];
+  "16"--"34" [color=white];
+  "16"--"49" [color=white];
+  "17"--"26" [color=white];
+  "17"--"30" [color=white];
+  "17"--"34" [color=white];
+  "17"--"49" [color=white];
+  "18"--"29" [color=white];
+  "18"--"32" [color=white];
+  "18"--"35" [color=white];
+  "18"--"49" [color=white];
+  "19"--"28" [color=white];
+  "19"--"32" [color=white];
+  "19"--"35" [color=white];
+  "19"--"49" [color=white];
+  "20"--"30" [color=white];
+  "20"--"31" [color=white];
+  "20"--"33" [color=white];
+  "20"--"34" [color=white];
+  "20"--"35" [color=white];
+  "20"--"49" [color=white];
+  "21"--"26" [color=white];
+  "21"--"27" [color=white];
+  "21"--"32" [color=white];
+  "21"--"34" [color=white];
+  "21"--"35" [color=white];
+  "21"--"49" [color=white];
+  "22"--"28" [color=white];
+  "22"--"29" [color=white];
+  "22"--"32" [color=white];
+  "22"--"33" [color=white];
+  "22"--"35" [color=white];
+  "22"--"49" [color=white];
+  "23"--"30" [color=white];
+  "23"--"31" [color=white];
+  "23"--"32" [color=white];
+  "23"--"33" [color=white];
+  "23"--"34" [color=white];
+  "23"--"49" [color=white];
+  "24"--"37" [color=white];
+  "24"--"39" [color=white];
+  "24"--"50" [color=white];
+  "25"--"36" [color=white];
+  "25"--"38" [color=white];
+  "25"--"50" [color=white];
+  "26"--"37" [color=white];
+  "26"--"41" [color=white];
+  "26"--"45" [color=white];
+  "26"--"50" [color=white];
+  "27"--"36" [color=white];
+  "27"--"40" [color=white];
+  "27"--"45" [color=white];
+  "27"--"50" [color=white];
+  "28"--"39" [color=white];
+  "28"--"43" [color=white];
+  "28"--"46" [color=white];
+  "28"--"50" [color=white];
+  "29"--"38" [color=white];
+  "29"--"42" [color=white];
+  "29"--"46" [color=white];
+  "29"--"50" [color=white];
+  "30"--"41" [color=white];
+  "30"--"44" [color=white];
+  "30"--"47" [color=white];
+  "30"--"50" [color=white];
+  "31"--"40" [color=white];
+  "31"--"44" [color=white];
+  "31"--"47" [color=white];
+  "31"--"50" [color=white];
+  "32"--"42" [color=white];
+  "32"--"43" [color=white];
+  "32"--"45" [color=white];
+  "32"--"46" [color=white];
+  "32"--"47" [color=white];
+  "32"--"50" [color=white];
+  "33"--"38" [color=white];
+  "33"--"39" [color=white];
+  "33"--"44" [color=white];
+  "33"--"46" [color=white];
+  "33"--"47" [color=white];
+  "33"--"50" [color=white];
+  "34"--"40" [color=white];
+  "34"--"41" [color=white];
+  "34"--"44" [color=white];
+  "34"--"45" [color=white];
+  "34"--"47" [color=white];
+  "34"--"50" [color=white];
+  "35"--"42" [color=white];
+  "35"--"43" [color=white];
+  "35"--"44" [color=white];
+  "35"--"45" [color=white];
+  "35"--"46" [color=white];
+  "35"--"50" [color=white];
+  "36"--"48" [color=white];
+  "36"--"51" [color=white];
+  "37"--"48" [color=white];
+  "37"--"51" [color=white];
+  "38"--"48" [color=white];
+  "38"--"51" [color=white];
+  "39"--"48" [color=white];
+  "39"--"51" [color=white];
+  "40"--"48" [color=white];
+  "40"--"51" [color=white];
+  "41"--"48" [color=white];
+  "41"--"51" [color=white];
+  "42"--"48" [color=white];
+  "42"--"51" [color=white];
+  "43"--"48" [color=white];
+  "43"--"51" [color=white];
+  "44"--"48" [color=white];
+  "44"--"51" [color=white];
+  "45"--"48" [color=white];
+  "45"--"51" [color=white];
+  "46"--"48" [color=white];
+  "46"--"51" [color=white];
+  "47"--"48" [color=white];
+  "47"--"51" [color=white];
+  "48"--"49" [color=white];
+  "48"--"50" [color=white];
+  "48"--"51" [color=white];
+  "49"--"50" [color=white];
+  "49"--"51" [color=white];
+  "50"--"51" [color=white];
+}

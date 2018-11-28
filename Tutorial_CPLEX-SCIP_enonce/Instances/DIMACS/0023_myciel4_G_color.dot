@@ -1,0 +1,96 @@
+graph G {
+  0[shape = octagon, style = filled , fillcolor = magenta ]
+  1[shape = octagon, style = filled , fillcolor = darkorange ]
+  2[shape = octagon, style = filled , fillcolor = cyan ]
+  3[shape = octagon, style = filled , fillcolor = red ]
+  4[shape = octagon, style = filled , fillcolor = forestgreen3 ]
+  5[shape = octagon, style = filled , fillcolor = indigo ]
+  6[shape = octagon, style = filled , fillcolor = yellow ]
+  7[shape = octagon, style = filled , fillcolor = indigo ]
+  8[shape = octagon, style = filled , fillcolor = forestgreen3 ]
+  9[shape = octagon, style = filled , fillcolor = cyan ]
+  10[shape = octagon, style = filled , fillcolor = blue ]
+  11[shape = octagon, style = filled , fillcolor = green ]
+  12[shape = octagon, style = filled , fillcolor = darkorange ]
+  13[shape = octagon, style = filled , fillcolor = deeppink ]
+  14[shape = octagon, style = filled , fillcolor = indigo ]
+  15[shape = octagon, style = filled , fillcolor = deeppink ]
+  16[shape = octagon, style = filled , fillcolor = green ]
+  17[shape = octagon, style = filled , fillcolor = deeppink ]
+  18[shape = octagon, style = filled , fillcolor = midnightblue ]
+  19[shape = octagon, style = filled , fillcolor = forestgreen3 ]
+  20[shape = octagon, style = filled , fillcolor = blue ]
+  21[shape = octagon, style = filled , fillcolor = darkorchid ]
+  22[shape = octagon, style = filled , fillcolor = red ]
+  "0"--"1";
+  "0"--"3";
+  "0"--"6";
+  "0"--"8";
+  "0"--"12";
+  "0"--"14";
+  "0"--"17";
+  "0"--"19";
+  "1"--"2";
+  "1"--"5";
+  "1"--"7";
+  "1"--"11";
+  "1"--"13";
+  "1"--"16";
+  "1"--"18";
+  "2"--"4";
+  "2"--"6";
+  "2"--"9";
+  "2"--"12";
+  "2"--"15";
+  "2"--"17";
+  "2"--"20";
+  "3"--"4";
+  "3"--"5";
+  "3"--"9";
+  "3"--"11";
+  "3"--"15";
+  "3"--"16";
+  "3"--"20";
+  "4"--"7";
+  "4"--"8";
+  "4"--"13";
+  "4"--"14";
+  "4"--"18";
+  "4"--"19";
+  "5"--"10";
+  "5"--"12";
+  "5"--"14";
+  "5"--"21";
+  "6"--"10";
+  "6"--"11";
+  "6"--"13";
+  "6"--"21";
+  "7"--"10";
+  "7"--"12";
+  "7"--"15";
+  "7"--"21";
+  "8"--"10";
+  "8"--"11";
+  "8"--"15";
+  "8"--"21";
+  "9"--"10";
+  "9"--"13";
+  "9"--"14";
+  "9"--"21";
+  "10"--"16";
+  "10"--"17";
+  "10"--"18";
+  "10"--"19";
+  "10"--"20";
+  "11"--"22";
+  "12"--"22";
+  "13"--"22";
+  "14"--"22";
+  "15"--"22";
+  "16"--"22";
+  "17"--"22";
+  "18"--"22";
+  "19"--"22";
+  "20"--"22";
+  "21"--"22";
+}

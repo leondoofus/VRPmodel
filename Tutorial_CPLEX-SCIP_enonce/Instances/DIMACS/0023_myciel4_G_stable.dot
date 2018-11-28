@@ -1,0 +1,96 @@
+graph G {
+  0[shape = octagon, color=white]
+  1[shape = octagon, color=white]
+  2[shape = octagon, color=white]
+  3[shape = octagon, color=white]
+  4[shape = octagon, color=white]
+  5[shape = octagon, color=white]
+  6[shape = octagon, color=white]
+  7[shape = octagon, color=white]
+  8[shape = octagon, color=white]
+  9[shape = octagon, color=white]
+  10[shape = octagon, color=white]
+  11[shape = octagon]
+  12[shape = octagon]
+  13[shape = octagon]
+  14[shape = octagon]
+  15[shape = octagon]
+  16[shape = octagon]
+  17[shape = octagon]
+  18[shape = octagon]
+  19[shape = octagon]
+  20[shape = octagon]
+  21[shape = octagon]
+  22[shape = octagon, color=white]
+  "0"--"1" [color=white];
+  "0"--"3" [color=white];
+  "0"--"6" [color=white];
+  "0"--"8" [color=white];
+  "0"--"12" [color=white];
+  "0"--"14" [color=white];
+  "0"--"17" [color=white];
+  "0"--"19" [color=white];
+  "1"--"2" [color=white];
+  "1"--"5" [color=white];
+  "1"--"7" [color=white];
+  "1"--"11" [color=white];
+  "1"--"13" [color=white];
+  "1"--"16" [color=white];
+  "1"--"18" [color=white];
+  "2"--"4" [color=white];
+  "2"--"6" [color=white];
+  "2"--"9" [color=white];
+  "2"--"12" [color=white];
+  "2"--"15" [color=white];
+  "2"--"17" [color=white];
+  "2"--"20" [color=white];
+  "3"--"4" [color=white];
+  "3"--"5" [color=white];
+  "3"--"9" [color=white];
+  "3"--"11" [color=white];
+  "3"--"15" [color=white];
+  "3"--"16" [color=white];
+  "3"--"20" [color=white];
+  "4"--"7" [color=white];
+  "4"--"8" [color=white];
+  "4"--"13" [color=white];
+  "4"--"14" [color=white];
+  "4"--"18" [color=white];
+  "4"--"19" [color=white];
+  "5"--"10" [color=white];
+  "5"--"12" [color=white];
+  "5"--"14" [color=white];
+  "5"--"21" [color=white];
+  "6"--"10" [color=white];
+  "6"--"11" [color=white];
+  "6"--"13" [color=white];
+  "6"--"21" [color=white];
+  "7"--"10" [color=white];
+  "7"--"12" [color=white];
+  "7"--"15" [color=white];
+  "7"--"21" [color=white];
+  "8"--"10" [color=white];
+  "8"--"11" [color=white];
+  "8"--"15" [color=white];
+  "8"--"21" [color=white];
+  "9"--"10" [color=white];
+  "9"--"13" [color=white];
+  "9"--"14" [color=white];
+  "9"--"21" [color=white];
+  "10"--"16" [color=white];
+  "10"--"17" [color=white];
+  "10"--"18" [color=white];
+  "10"--"19" [color=white];
+  "10"--"20" [color=white];
+  "11"--"22" [color=white];
+  "12"--"22" [color=white];
+  "13"--"22" [color=white];
+  "14"--"22" [color=white];
+  "15"--"22" [color=white];
+  "16"--"22" [color=white];
+  "17"--"22" [color=white];
+  "18"--"22" [color=white];
+  "19"--"22" [color=white];
+  "20"--"22" [color=white];
+  "21"--"22" [color=white];
+}

@@ -1,0 +1,152 @@
+digraph G {
+  0[shape = octagon]
+  1[shape = octagon]
+  2[shape = octagon]
+  3[shape = octagon]
+  4[shape = octagon]
+  5[shape = octagon]
+  6[shape = octagon, color=white]
+  7[shape = octagon]
+  8[shape = octagon]
+  9[shape = octagon, color=white]
+  10[shape = octagon, color=white]
+  11[shape = octagon, color=white]
+  12[shape = octagon, color=white]
+  13[shape = octagon]
+  14[shape = octagon]
+  15[shape = octagon]
+  16[shape = octagon]
+  17[shape = octagon, color=white]
+  18[shape = octagon]
+  19[shape = octagon]
+  20[shape = octagon, color=white]
+  21[shape = octagon, color=white]
+  22[shape = octagon]
+  23[shape = octagon]
+  24[shape = octagon]
+  25[shape = octagon]
+  26[shape = octagon, color=white]
+  27[shape = octagon]
+  28[shape = octagon, color=white]
+  29[shape = octagon, color=white]
+  "0"->"19";
+  "0"->"29" [color=white];
+  "1"->"20" [color=white];
+  "1"->"22";
+  "1"->"26" [color=white];
+  "1"->"3";
+  "2"->"1";
+  "2"->"16";
+  "2"->"12" [color=white];
+  "2"->"5";
+  "2"->"9" [color=white];
+  "3"->"6" [color=white];
+  "3"->"11" [color=white];
+  "3"->"9" [color=white];
+  "3"->"17" [color=white];
+  "4"->"29" [color=white];
+  "4"->"22";
+  "4"->"16";
+  "5"->"13";
+  "6"->"11" [color=white];
+  "6"->"13" [color=white];
+  "6"->"3" [color=white];
+  "6"->"7" [color=white];
+  "7"->"25";
+  "7"->"11" [color=white];
+  "7"->"29" [color=white];
+  "7"->"24";
+  "7"->"15";
+  "8"->"27";
+  "8"->"5";
+  "8"->"2";
+  "8"->"26" [color=white];
+  "9"->"18" [color=white];
+  "9"->"8" [color=white];
+  "9"->"12" [color=white];
+  "9"->"11" [color=white];
+  "9"->"19" [color=white];
+  "10"->"3" [color=white];
+  "10"->"27" [color=white];
+  "10"->"8" [color=white];
+  "11"->"17" [color=white];
+  "11"->"13" [color=white];
+  "11"->"19" [color=white];
+  "11"->"22" [color=white];
+  "11"->"0" [color=white];
+  "11"->"9" [color=white];
+  "11"->"8" [color=white];
+  "12"->"19" [color=white];
+  "12"->"7" [color=white];
+  "12"->"21" [color=white];
+  "13"->"12" [color=white];
+  "13"->"27";
+  "13"->"22";
+  "14"->"6" [color=white];
+  "14"->"20" [color=white];
+  "14"->"22";
+  "14"->"28" [color=white];
+  "15"->"19";
+  "15"->"21" [color=white];
+  "15"->"1";
+  "15"->"14";
+  "16"->"29" [color=white];
+  "16"->"28" [color=white];
+  "16"->"6" [color=white];
+  "16"->"0";
+  "16"->"9" [color=white];
+  "17"->"8" [color=white];
+  "17"->"2" [color=white];
+  "17"->"27" [color=white];
+  "17"->"18" [color=white];
+  "18"->"10" [color=white];
+  "18"->"12" [color=white];
+  "19"->"6" [color=white];
+  "19"->"26" [color=white];
+  "20"->"4" [color=white];
+  "20"->"10" [color=white];
+  "20"->"3" [color=white];
+  "20"->"11" [color=white];
+  "20"->"5" [color=white];
+  "20"->"24" [color=white];
+  "20"->"1" [color=white];
+  "20"->"25" [color=white];
+  "20"->"16" [color=white];
+  "20"->"6" [color=white];
+  "21"->"25" [color=white];
+  "21"->"19" [color=white];
+  "22"->"16";
+  "22"->"21" [color=white];
+  "22"->"0";
+  "22"->"19";
+  "22"->"29" [color=white];
+  "22"->"10" [color=white];
+  "22"->"3";
+  "23"->"17" [color=white];
+  "24"->"4";
+  "24"->"29" [color=white];
+  "24"->"10" [color=white];
+  "24"->"11" [color=white];
+  "24"->"9" [color=white];
+  "24"->"28" [color=white];
+  "25"->"28" [color=white];
+  "25"->"11" [color=white];
+  "25"->"16";
+  "25"->"19";
+  "26"->"19" [color=white];
+  "26"->"23" [color=white];
+  "26"->"2" [color=white];
+  "27"->"0";
+  "27"->"3";
+  "27"->"10" [color=white];
+  "27"->"16";
+  "28"->"9" [color=white];
+  "28"->"18" [color=white];
+  "28"->"1" [color=white];
+  "28"->"15" [color=white];
+  "28"->"22" [color=white];
+  "28"->"8" [color=white];
+  "29"->"7" [color=white];
+  "29"->"2" [color=white];
+  "29"->"6" [color=white];
+}
