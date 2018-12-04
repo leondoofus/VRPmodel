@@ -1,3 +1,4 @@
 ﻿  Main.cpp
-c:\users\thanh\desktop\maoa\project\project\main.cpp(9): warning C4804: '%': unsafe use of type 'bool' in operation
-  Project.vcxproj -> C:\Users\Thanh\Desktop\MAOA\Project\Debug\Project.exe
+  TSP.cpp
+  Generating Code...
+  Project.vcxproj -> C:\Users\Thanh\Desktop\maoa\Project\Debug\Project.exe

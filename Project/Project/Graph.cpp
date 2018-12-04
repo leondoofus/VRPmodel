@@ -1,8 +1,7 @@
 #include "Graph.h"
 #include <fstream>
 #include <sstream>
-#include <lemon/list_graph.h>
-using namespace lemon;
+#include <cmath>
 
 
 Graph::Graph(string filename)
@@ -120,5 +119,5 @@ void Graph::printGraph(void)
 
 float Graph::distance(int node1, int node2)
 {
-	return std::sqrt((float)(std::pow(coord[node1].x - coord[node2].x,2) + std::pow(coord[node1].y - coord[node2].y,2)));
+	return sqrt((float)(pow(coord[node1].x - coord[node2].x,2) + pow(coord[node1].y - coord[node2].y,2)));
 }
