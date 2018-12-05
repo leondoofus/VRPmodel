@@ -9,15 +9,16 @@ int main(void)
 	//G.printGraph();
 	//cout << G.distance(1,5) << endl;
 
-	/*BP bp = BP();
-	bp.firstFitDecreasing(G);
-	cout << "wooooooooooo" << endl;*/
+	BP bp = BP();
+	vector<vector<int>> l;
+	l = bp.firstFitDecreasing(G);
+	cout << "wooooooooooo" << endl;
 
 
-	vector<int> l = {2,3,4};
+	/*vector<int> l = {2,3,4};*/
 	TSP tsp = TSP();;
-	tsp.neareast_neighbor(G, l);
+	/*tsp.nearestNeighbor(G, l);*/
 	cout << "-----------" << endl;
-	tsp.nearest_insertion(G, l);
+	tsp.nearestInsertion(G, l);
 	return 0;
 }
