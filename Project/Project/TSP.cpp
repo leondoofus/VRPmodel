@@ -5,7 +5,7 @@ TSP::TSP()
 }
 
 
-vector<int> TSP::neareast_neighbor(Graph graph, vector<int> nodes)
+vector<int> TSP::nearest_neighbor(Graph graph, vector<int> nodes)
 {
 	vector<int> tour;
 	tour.push_back(graph.depot);
