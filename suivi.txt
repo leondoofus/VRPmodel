@@ -1,2 +1,6 @@
-25/11 (Léon):
+﻿25/11 (Léon):
 	readfile
+05/12 (Clément):
+	- début avec Lemon
+	- voir s'il existait un algo permettant de savoir si un BinPacking se résoud avec k (non trouvé)
+	- ajout de fonctions permettant de retourner la solution d'un graphe
