@@ -9,8 +9,7 @@ BP::BP()
 
 }
 
-/* Returns an integer that is the maximum of the demands of the clients
- * that is not already in the decreasing order list takenIndexes
+/* Returns an integer that is the maximum of the demands of the clients that is not already in the decreasing order list takenIndexes
  */
 int BP::getIndexOfMax(std::map<int, int> demand, int dimension, std::vector<int> takenIndexes)
 {
@@ -42,8 +41,7 @@ int BP::getIndexOfMax(std::map<int, int> demand, int dimension, std::vector<int>
 	return indexOfMax;
 }
 
-/* Returns a list of integers that is the list of the indexes
- * of clients sorted by decreasing order of their demand
+/* Returns a list of integers that is the list of the indexes of clients sorted by decreasing order of their demand
  */
 std::vector<int> BP::getDecreasingOrder(std::map<int, int> demand, int dimension)
 {
@@ -62,7 +60,8 @@ std::vector<int> BP::getDecreasingOrder(std::map<int, int> demand, int dimension
 	return takenIndexes;
 }
 
-/* First Fit Decreasing Algorithme */
+/* First Fit Decreasing Algorithm: Returns a list of list that represents the clients affected to each truck
+*/
 std::vector<std::vector<int>> BP::firstFitDecreasing(Graph graph)
 {
 	std::vector<int> decreasingOrder = getDecreasingOrder(graph.demand, graph.dimension);
