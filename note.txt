@@ -2,3 +2,6 @@ On pourra utiliser lemon http://lemon.cs.elte.hu/pub/tutorial/ pour avoir des al
 Mardi Jeudi aprem (peut etre vendredi matin)
 On devra avoir qqch avant le 12/12
 
+//Léon
+Regardons dans la solution, serait-il mieux de faire un random de sommets avant de BP ? Je sais pas si cela pourrait améliorer le coût ?
+http://www.cplusplus.com/reference/algorithm/random_shuffle/
