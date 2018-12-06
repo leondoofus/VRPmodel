@@ -24,6 +24,9 @@
     <ClInclude Include="BP.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="EvaluateTour.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Graph.cpp">
@@ -36,6 +39,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BP.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EvaluateTour.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

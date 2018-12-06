@@ -119,11 +119,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BP.h" />
+    <ClInclude Include="EvaluateTour.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="TSP.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BP.cpp" />
+    <ClCompile Include="EvaluateTour.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="TSP.cpp" />

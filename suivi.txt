@@ -1,6 +1,15 @@
-﻿25/11 (Léon):
+﻿On pourra utiliser lemon http://lemon.cs.elte.hu/pub/tutorial/ pour avoir des algos de graphes
+Mardi Jeudi aprem (peut etre vendredi matin)
+On devra avoir qqch avant le 12/12
+
+25/11 (Léon):
 	readfile
+
 05/12 (Clément):
 	- début avec Lemon
 	- voir s'il existait un algo permettant de savoir si un BinPacking se résoud avec k (non trouvé)
 	- ajout de fonctions permettant de retourner la solution d'un graphe
+
+06/12 (Léon):
+	- Regardons dans la solution, serait-il mieux de faire random(sommets) avant BP ? Je sais pas si cela pourrait améliorer le coût ? http://www.cplusplus.com/reference/algorithm/random_shuffle/
+	- ajout fonction qui calcule sum(sum(soustours.distance)), contrairement au résultat attendu, le coût n'est pas calculé comme ça 

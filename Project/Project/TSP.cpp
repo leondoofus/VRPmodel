@@ -26,8 +26,8 @@ vector<int> TSP::nearest_neighbor(Graph graph, vector<int> nodes)
 		nodes.erase(nodes.begin() + index);
 	}
 	tour.push_back(graph.depot);
-	for (int it = 0; it != tour.size(); ++it)
-		cout << tour[it] << endl;
+	/*for (int it = 0; it != tour.size(); ++it)
+		cout << tour[it] << endl;*/
 	return tour;
 }
 
@@ -56,8 +56,8 @@ vector<int> TSP::nearest_insertion(Graph graph, vector<int> nodes)
 		tour.insert(tour.begin() + index + 1, nodes[node]);
 		nodes.erase(nodes.begin() + node);
 	}
-	for (int it = 0; it != tour.size(); ++it)
-		cout << tour[it] << endl;
+	/*for (int it = 0; it != tour.size(); ++it)
+		cout << tour[it] << endl;*/
 	return tour;
 }
 
@@ -65,7 +65,7 @@ vector<vector<int>> TSP::nearestNeighbor(Graph graph, vector<vector<int>> nodes)
 {
 	vector<vector<int>> tours;
 
-	for (int i = 0; i < nodes.size(); ++i)
+	for (int i = 0; i != nodes.size(); ++i)
 	{
 		tours.push_back(nearest_neighbor(graph, nodes[i]));
 	}
@@ -74,7 +74,8 @@ vector<vector<int>> TSP::nearestNeighbor(Graph graph, vector<vector<int>> nodes)
 	{
 		cout << "----------" << endl;
 		for (int it2 = 0; it2 != tours[it].size(); ++it2)
-			cout << tours[it][it2] << endl;
+			cout << tours[it][it2] << " ";
+		cout << endl;
 	}
 	return tours;
 }
@@ -83,7 +84,7 @@ vector<vector<int>> TSP::nearestInsertion(Graph graph, vector<vector<int>> nodes
 {
 	vector<vector<int>> tours;
 
-	for (int i = 0; i < nodes.size(); ++i)
+	for (int i = 0; i != nodes.size(); ++i)
 	{
 		tours.push_back(nearest_insertion(graph, nodes[i]));
 	}
@@ -92,7 +93,8 @@ vector<vector<int>> TSP::nearestInsertion(Graph graph, vector<vector<int>> nodes
 	{
 		cout << "----------" << endl;
 		for (int it2 = 0; it2 != tours[it].size(); ++it2)
-			cout << tours[it][it2] << endl;
+			cout << tours[it][it2] << " ";
+		cout << endl;
 	}
 	return tours;
 }

@@ -103,11 +103,11 @@ std::vector<std::vector<int>> BP::firstFitDecreasing(Graph graph)
 			weights.push_back(d);
 		}
 	}
-	for (int it = 0; it != allocation.size(); ++it)
+	/*for (int it = 0; it != allocation.size(); ++it)
 	{
 		cout << "----------" << endl;
 		for (int it2 = 0; it2 != allocation[it].size(); ++it2)
 			cout << allocation[it][it2] << endl;
-	}
+	}*/
 	return allocation;
 }
