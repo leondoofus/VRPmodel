@@ -21,7 +21,7 @@ int main(void)
 	EvaluateTour e = EvaluateTour();
 	e.evaluate(G, tsp.nearestInsertion(G, l));
 	cout << "OPT :" << endl;
-	e.evaluate(G, { {21, 31, 19, 17, 13, 7, 26},{12, 1, 16, 30}, {27, 24}, {29, 18, 8, 9, 22, 15, 10, 25, 5, 20}, {14, 28, 11, 4, 23, 3, 2, 6} });
+	e.evaluate(G, { {1, 22, 32, 20, 18, 14, 8, 27, 1},{1, 13, 2, 17, 31, 1}, {1, 28, 25, 1}, {1, 30, 19, 9, 10, 23, 16, 11, 26, 6, 21, 1}, {1, 15, 29, 12, 5, 24, 4, 3, 7, 1} });
 	cout << "Cost expected : 784" << endl;
 	return 0;
 }
