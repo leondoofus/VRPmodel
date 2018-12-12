@@ -12,4 +12,8 @@ On devra avoir qqch avant le 12/12
 
 06/12 (Léon):
 	- Regardons dans la solution, serait-il mieux de faire random(sommets) avant BP ? Je sais pas si cela pourrait améliorer le coût ? http://www.cplusplus.com/reference/algorithm/random_shuffle/
-	- ajout fonction qui calcule sum(sum(soustours.distance)), contrairement au résultat attendu, le coût n'est pas calculé comme ça 
+	- ajout fonction qui calcule sum(sum(soustours.distance))
+
+12/12 (Léon):
+	- ajout #vehicules
+	- ajout test borne inf

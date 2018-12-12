@@ -7,7 +7,11 @@
 int main(void)
 {
 	Graph G = Graph("data/A/A-n32-k5.vrp");
-	//G.printGraph();
+	G.printGraph();
+	if (G.computeRelaxedCapacity())
+		cout << "Born inf satisfaite" << endl;
+	else
+		cout << "Born inf non satisfaite" << endl;
 	//cout << G.distance(1,5) << endl;
 
 	BP bp = BP();

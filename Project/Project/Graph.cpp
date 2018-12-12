@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <cmath>
+#include <regex>
 
 
 Graph::Graph(string filename)
@@ -17,6 +18,13 @@ Graph::Graph(string filename)
 			std::size_t found = line.find("NAME");
 			if (found != string::npos)
 				name = line.substr(7);
+			found = line.find("COMMENT");
+			if(found != string::npos){
+	            std::regex r ("[[:digit:]]+");
+	            std::smatch s;
+	            std::regex_search(line,s,r);
+	            vehicles = stoi(s[0]);
+	         }
 			found = line.find("TYPE");
 			if (found != string::npos && type.empty())
 				type = line.substr(7);
@@ -102,6 +110,7 @@ void Graph::printGraph(void)
 	cout << "Name : " << name << endl;
 	cout << "Type : " << type << endl;
 	cout << "Weight type : " << wtype << endl;
+	cout << "Vehicles : " << vehicles << endl;
 	cout << "Dimension : " << dimension << endl;
 	cout << "Capacity : " << capacity << endl;
 	cout << "Node coord :" << endl;
@@ -120,4 +129,13 @@ void Graph::printGraph(void)
 float Graph::distance(int node1, int node2)
 {
 	return sqrt((float)(pow(coord[node1].x - coord[node2].x,2) + pow(coord[node1].y - coord[node2].y,2)));
+}
+
+bool Graph::computeRelaxedCapacity()
+{
+	int sum = 0;
+	for (int i = 1; i <= dimension; i++){
+		sum += demand[i];
+	}
+	return sum <= capacity * vehicles;
 }
