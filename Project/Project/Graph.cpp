@@ -39,11 +39,19 @@ Graph::Graph(string filename)
 			if (found != string::npos)
 				wtype = line.substr(19);
 			found = line.find("DIMENSION");
-			if (found != string::npos)
-				dimension = stoi(line.substr(12));
+			if (found != string::npos){
+				std::regex r ("[[:digit:]]+");
+	            std::smatch s;
+	            std::regex_search(line,s,r);
+	            dimension = stoi(s[0]);
+	        }
 			found = line.find("CAPACITY");
-			if (found != string::npos)
-				capacity = stoi(line.substr(11));
+			if (found != string::npos){
+				std::regex r ("[[:digit:]]+");
+	            std::smatch s;
+	            std::regex_search(line,s,r);
+	            capacity = stoi(s[0]);
+	        }
 			found = line.find("NODE_COORD_SECTION");
 			if (found != string::npos)
 				break;
