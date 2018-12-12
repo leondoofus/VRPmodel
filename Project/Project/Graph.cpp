@@ -18,7 +18,14 @@ Graph::Graph(string filename)
 			std::size_t found = line.find("NAME");
 			if (found != string::npos)
 				name = line.substr(7);
-			found = line.find("COMMENT");
+			found = line.find("VEHICLES");
+			if(found != string::npos){
+	            std::regex r ("[[:digit:]]+");
+	            std::smatch s;
+	            std::regex_search(line,s,r);
+	            vehicles = stoi(s[0]);
+	         }
+	        found = line.find("trucks");
 			if(found != string::npos){
 	            std::regex r ("[[:digit:]]+");
 	            std::smatch s;
