@@ -3,6 +3,9 @@
 #include <vector>
 using namespace std;
 
+/**
+Class for the resolution of the Bin Packing Problem
+**/
 class BP
 {
 private:
