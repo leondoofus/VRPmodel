@@ -1,8 +1,6 @@
-#include "Graph.h"
+#include "SA.h"
 #include "BP.h"
-#include "EvaluateTour.h"
 #include <algorithm>
-#include <vector>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -32,7 +30,7 @@ std::vector<std::vector<int>> SA::simulatedAnnealing(Graph graph, EvaluateTour e
 
 	srand(time(NULL));
 	int k = 0;
-	while(k < kmax && eenergy_s > energy_max)
+	while(k < kmax && energy_s > energy_max)
 	{
 		sn = getNeighbor(graph, s, m);
 		energy_sn = e.evaluate(graph, sn) + 100 * sn.size();
@@ -46,7 +44,7 @@ std::vector<std::vector<int>> SA::simulatedAnnealing(Graph graph, EvaluateTour e
 		if(energy_s < energy_g)
 		{
 			g = s;
-			energy_g = energ_s;
+			energy_g = energy_s;
 		}
 
 		k += 1;
@@ -58,14 +56,14 @@ std::vector<std::vector<int>> SA::simulatedAnnealing(Graph graph, EvaluateTour e
 
 float SA::getProbability(float e, float t)
 {
-	return exp(-e/t)
+	return exp(-e / t);
 }
 
 std::vector<std::vector<int>> SA::getNeighbor(Graph graph, std::vector<std::vector<int>> s, int m)
 {
 	srand(time(NULL));
 
-	r = rand();
+	int r = rand();
 
 	if(r < 1/3.0)
 	{
@@ -146,7 +144,7 @@ std::vector<std::vector<int>> SA::eraseEmptyTruck(Graph graph, std::vector<std::
 	{
 		if (s[k].size() == 2)
 		{
-			s.erase(k);
+			s.erase(s.begin()+k); // this line could ruin the loop
 			return s;
 		}
 	}
@@ -176,12 +174,19 @@ std::vector<std::vector<int>> SA::clientChange(Graph graph, std::vector<std::vec
 		s1 = s[i1];
 		s2 = s[i2];
 
-		j1 = rand() * (s1.size()-1) + 1;
-		j2 = rand() * (s2.size()-1) + 1;
+		//j1 = rand() * (s1.size()-1) + 1;
+		//j2 = rand() * (s2.size()-1) + 1;
 
-		s1.insert(j1, s2[j2]);
-		s2.erase(j2);
+		// You mean this ?
+		j1 = rand() % (s1.size() - 1) + 1;
+		j2 = rand() % (s2.size() - 1) + 1;
+
 		
+		//s1.insert(j1, s2[j2]);
+		//s2.erase(j2);
+		s1.insert(s1.begin() + j1, s2[j2]);
+		s2.erase(s2.begin() + j2);
+
 		if (isValidTruck(graph, s1))
 		{
 			neighborNotFound = false;
@@ -199,9 +204,9 @@ bool SA::isValidTruck(Graph graph, std::vector<int> s)
 {
 	int sumD = 0;
 
-	for (int k = 0; k < s1.size(); ++k)
+	for (int k = 0; k < s.size(); ++k)
 	{
-		sumD += graph.demand[s1[k]];
+		sumD += graph.demand[s[k]];
 		
 		if (sumD > graph.capacity)
 		{
