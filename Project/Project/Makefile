@@ -64,20 +64,23 @@ all: Test
 Graph.o: Graph.cpp Graph.h
 	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) -c Graph.cpp -o Graph.o
 
+TSP.o: Graph.o TSP.h TSP.cpp
+	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) -c TSP.cpp Graph.o -o TSP.o
+
 BP.o: Graph.o BP.h BP.cpp
 	$(CCC) -c -w  $(CCFLAGS) $(CCLNDIRS) -c BP.cpp Graph.o -o BP.o
 
 EvaluateTour.o: Graph.o EvaluateTour.h EvaluateTour.cpp
 	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) -c EvaluateTour.cpp Graph.o -o EvaluateTour.o
 
-SA.o: Graph.o EvaluateTour.o BP.o SA.cpp SA.h
-	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) -c SA.cpp Graph.o EvaluateTour.o BP.o -o SA.o
+#SA.o: Graph.o EvaluateTour.o BP.o SA.cpp SA.h
+#	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) -c SA.cpp Graph.o EvaluateTour.o BP.o -o SA.o
 
 MTZ.o: Graph.o MTZ.cpp
 	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) MTZ.cpp Graph.o -o MTZ.o
 
-Test: SA.o MTZ.o 
-	$(CCC) $(CCFLAGS) $(CCLNDIRS) SA.o MTZ.o Graph.o   -o Test $(CCLNFLAGS)
+Test: TSP.o BP.o EvaluateTour.o MTZ.o Main.cpp
+	$(CCC) $(CCFLAGS) $(CCLNDIRS) Graph.o TSP.o BP.o EvaluateTour.o MTZ.o Main.cpp -o Test $(CCLNFLAGS)
 
 clean:
 	rm -f *.o Test
