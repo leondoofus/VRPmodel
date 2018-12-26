@@ -14,6 +14,6 @@ float EvaluateTour::evaluate(Graph graph, vector<vector<int>> tours)
 		for (int it2 = 0; it2 != tours[it].size() - 1; ++it2)
 			val += graph.distance(tours[it][it2], tours[it][it2 + 1]);
 	}
-	cout << "Tours value : " << val << endl;
+	//cout << "Tours value : " << val << endl;
 	return val;
 }
