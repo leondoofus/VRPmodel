@@ -17,3 +17,7 @@ On devra avoir qqch avant le 12/12
 12/12 (Léon):
 	- ajout #vehicules
 	- ajout test borne inf
+
+26/12 (Léon):
+	- checké le pb de compil de Clément
+	- Formulation MTZ (pas testé)

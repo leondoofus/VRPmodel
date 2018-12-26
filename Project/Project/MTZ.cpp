@@ -16,6 +16,7 @@ void MTZ::compute(Graph *graph) {
 	int i, j, k;
 
 	int depot = graph->depot; //Reformule with an offset of 1
+	int Q = graph->capacity;
 
 	vector<int> sol;
 
@@ -63,28 +64,26 @@ void MTZ::compute(Graph *graph) {
 	////////////////////////
 
 	vector<IloNumVar> x;
-	x.resize(graph->capacity*graph->capacity);
-	for (i = 0; i < graph->capacity; i++) {
-		for (j = 0; j < graph->capacity; j++) {
-			x[i][j] = IloNumVar(env, 0.0, 1.0, ILOINT);
+	x.resize(graph->dimension*graph->dimension);
+	for (i = 0; i < graph->dimension; i++) {
+		for (j = 0; j < graph->dimension; j++) {
+			x[i * graph->dimension + j] = IloNumVar(env, 0.0, 1.0, ILOINT);
 			ostringstream varname;
 			varname.str("");
 			varname << "x_" << i << "_" << j;
-			x[i][j].setName(varname.str().c_str());
+			x[i * graph->dimension + j].setName(varname.str().c_str());
 		}
 	}
 
-	/*vector<IloNumVar> u;
-	u.resize(G.nb_nodes);
-	for (i = 0; i < G.nb_nodes; i++) {
-		u[i] = IloNumVar(env, 1.0, G.nb_nodes, ILOFLOAT);
-		ostringstream nomvar;
-		nomvar.str("");
-		nomvar << "u_" << i;
-		u[i].setName(nomvar.str().c_str());
-	}*/
-
-
+	vector<IloNumVar> w;
+	w.resize(graph->dimension);
+	for (i = 0; i < graph->dimension; i++) {
+		w[i] = IloNumVar(env, 0.0, Q, ILOFLOAT);
+		ostringstream varname;
+		varname.str("");
+		varname << "w_" << i << "_" << j;
+		w[i].setName(varname.str().c_str());
+	}
 
 	//////////////
 	//////  CST
@@ -98,10 +97,10 @@ void MTZ::compute(Graph *graph) {
 
 	IloExpr c1(env);
 	IloExpr c2(env);
-	for (i = 0; i < graph->capacity; i++) {
+	for (i = 0; i < graph->dimension; i++) {
 		if (i != depot) {
-			c1 += x[depot][i - 1];
-			c2 += x[i - 1][depot];
+			c1 += x[depot * graph->dimension + i - 1];
+			c2 += x[(i - 1) * graph->dimension + depot];
 		}
 	}
 	CC.add(c1 <= graph->vehicles);
@@ -112,13 +111,13 @@ void MTZ::compute(Graph *graph) {
 	nbcst++;
 
 	// Constraints (3) and (4) of MTZ
-	for (i = 0; i < graph->capacity; i++) {
+	for (i = 0; i < graph->dimension; i++) {
 		if (i != depot) {
 			IloExpr c3(env);
 			IloExpr c4(env);
-			for (j = 0; j < graph->capacity; j++) {
-				c3 += x[i][j];
-				c4 += x[j][i];
+			for (j = 0; j < graph->dimension; j++) {
+				c3 += x[i * graph->dimension + j];
+				c4 += x[j * graph->dimension + i];
 			}
 			CC.add(c3 <= 1);
 			CC.add(c4 <= 1);
@@ -140,23 +139,21 @@ void MTZ::compute(Graph *graph) {
 	}
 
 
-	// Constraints (5)
-
-	/*for (i = 0; i < graph->capacity; i++) {
-		for (j = 0; j < graph->capacity; j++) {
-			for (it = G.V_nodes[i].L_adjLinks.begin(); it != G.V_nodes[i].L_adjLinks.end(); it++) {
-				IloExpr c1(env);
-				c1 += G.nb_nodes*x[i] + G.nb_nodes*x[(*it)->v2] + u[i] - u[(*it)->v2];
-				CC.add(c1 <= 2 * G.nb_nodes - 1);
+	// Constraints (5) MTZ
+	for (i = 0; i < graph->dimension; i++) {
+		for (j = 0; j < graph->dimension; j++) {
+			if (j != i) {
+				IloExpr c5(env);
+				c5 += w[i] - w[j] + Q * graph->demand[i] * x[i * graph->dimension + j];
+				CC.add(c5 >= -Q);
 				ostringstream nomcst;
 				nomcst.str("");
-				nomcst << "CstMTZ_" << i << "_" << (*it)->v2;
+				nomcst << "CstMTZ_" << i << "_" << j;
 				CC[nbcst].setName(nomcst.str().c_str());
 				nbcst++;
 			}
 		}
-	}*/
-
+	}
 
 	model.add(CC);
 
@@ -167,9 +164,9 @@ void MTZ::compute(Graph *graph) {
 
 	IloObjective obj = IloAdd(model, IloMinimize(env, 0.0));
 
-	for (i = 0; i < graph->capacity; i++)
-		for (j = 0; j < graph->capacity; j++)
-			obj.setLinearCoef(x[i][j], graph->distance(i+1,j+1));
+	for (i = 0; i < graph->dimension; i++)
+		for (j = 0; j < graph->dimension; j++)
+			obj.setLinearCoef(x[i * graph->dimension + j], graph->distance(i+1,j+1));
 
 
 	///////////
@@ -209,10 +206,10 @@ void MTZ::compute(Graph *graph) {
 
 
 	vector<int>   solx;
-	solx.resize(graph->capacity*graph->capacity);
-	for (i = 0; i < graph->capacity; i++) {
-		for (j = 0; j < graph->capacity; j++)
-			solx[i][j] = cplex.getValue(x[i][j]);
+	solx.resize(graph->dimension*graph->dimension);
+	for (i = 0; i < graph->dimension; i++) {
+		for (j = 0; j < graph->dimension; j++)
+			solx[i * graph->dimension + j] = cplex.getValue(x[i * graph->dimension + j]);
 	}
 
 
