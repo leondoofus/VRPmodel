@@ -129,11 +129,11 @@ void MTZ::compute(Graph *graph) {
 			CC[nbcst].setName(nomcst.str().c_str());
 			nbcst++;
 
-			ostringstream nomcst;
-			nomcst.str("");
-			nomcst << "CstRetailerIN_" << i;
+			ostringstream nomcst2;
+			nomcst2.str("");
+			nomcst2 << "CstRetailerIN_" << i;
 
-			CC[nbcst].setName(nomcst.str().c_str());
+			CC[nbcst].setName(nomcst2.str().c_str());
 			nbcst++;
 		}
 	}
