@@ -19,6 +19,5 @@ private:
 	bool isValidTruck(Graph graph, std::vector<int> s);
 
 public:
-	SA();
 	std::vector<std::vector<int>> simulatedAnnealing(Graph graph, EvaluateTour e, std::vector<std::vector<int>> nodes, int kmax, float t, float alpha, float energy_max);
 };

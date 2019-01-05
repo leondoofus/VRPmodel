@@ -7,10 +7,6 @@
 #include <math.h>
 using namespace std;
 
-SA::SA()
-{
-}
-
 /**
 **/
 std::vector<std::vector<int>> SA::simulatedAnnealing(Graph graph, EvaluateTour e, std::vector<std::vector<int>> nodes, int kmax, float t, float alpha, float energy_max)
