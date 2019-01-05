@@ -7,6 +7,11 @@
 #include <math.h>
 using namespace std;
 
+SA::SA()
+{
+
+}
+
 /**
 **/
 std::vector<std::vector<int>> SA::simulatedAnnealing(Graph graph, EvaluateTour e, std::vector<std::vector<int>> nodes, int kmax, float t, float alpha, float energy_max)
@@ -25,13 +30,14 @@ std::vector<std::vector<int>> SA::simulatedAnnealing(Graph graph, EvaluateTour e
 	int m = nodes.size() + 1;
 
 	srand(time(NULL));
+
 	int k = 0;
 	while(k < kmax && energy_s > energy_max)
 	{
 		sn = getNeighbor(graph, s, m);
 		energy_sn = e.evaluate(graph, sn) + 100 * sn.size();
 
-		if(energy_sn < energy_s || rand() < getProbability(energy_sn-energy_s, temperature))
+		if(energy_sn < energy_s || ((double)rand() / (RAND_MAX)) < getProbability(energy_sn-energy_s, temperature))
 		{
 			s = sn;
 			energy_s = energy_sn;
@@ -42,10 +48,11 @@ std::vector<std::vector<int>> SA::simulatedAnnealing(Graph graph, EvaluateTour e
 			g = s;
 			energy_g = energy_s;
 		}
-
 		k += 1;
 		temperature *= alpha;
 	}
+
+	g = eraseEmptyTruck(graph, g);
 
 	return g;
 }
@@ -57,9 +64,7 @@ float SA::getProbability(float e, float t)
 
 std::vector<std::vector<int>> SA::getNeighbor(Graph graph, std::vector<std::vector<int>> s, int m)
 {
-	srand(time(NULL));
-
-	int r = rand();
+	double r = ((double) rand() / (RAND_MAX));
 
 	if(r < 1/3.0)
 	{
@@ -91,10 +96,9 @@ std::vector<std::vector<int>> SA::swapTruck(Graph graph, std::vector<std::vector
 	int j2;
 	int tmp;
 
-	srand(time(NULL));
 	do
 	{
-		i = rand() * s.size();
+		i = rand() % s.size();
 	} while (s[i].size() < 4);
 
 	if (s[i].size() == 4)
@@ -106,10 +110,10 @@ std::vector<std::vector<int>> SA::swapTruck(Graph graph, std::vector<std::vector
 		return s;
 	}
 
-	j1 = rand() * (s[i].size() - 1) + 1;;
+	j1 = rand() % (s[i].size() - 2) + 1;;
 	do
 	{
-		j2 = rand() * (s[i].size() - 1) + 1;;
+		j2 = rand() % (s[i].size() - 2) + 1;;
 	} while (j2 == j1);
 
 
@@ -161,29 +165,32 @@ std::vector<std::vector<int>> SA::clientChange(Graph graph, std::vector<std::vec
 
 	while (neighborNotFound)
 	{
-		srand(time(NULL));
-		i1 = rand() * s.size();
 		do
 		{
-			i2 = rand() * s.size();
+			i1 = (int)rand() % s.size();
+		} while (s[i1].size() < 3);
+		do
+		{
+			i2 = (int) rand() % s.size();
 		} while (i2 == i1);
 		s1 = s[i1];
 		s2 = s[i2];
 
-		//j1 = rand() * (s1.size()-1) + 1;
-		//j2 = rand() * (s2.size()-1) + 1;
+		j1 = (rand() % (s1.size() - 2)) + 1;
 
-		// You mean this ?
-		j1 = rand() % (s1.size() - 1) + 1;
-		j2 = rand() % (s2.size() - 1) + 1;
+		if (s2.size() == 2)
+		{
+			j2 = 1;
+		}
+		else
+		{
+			j2 = (rand() % (s2.size() - 2)) + 1;
+		}
 
-		
-		//s1.insert(j1, s2[j2]);
-		//s2.erase(j2);
-		s1.insert(s1.begin() + j1, s2[j2]);
-		s2.erase(s2.begin() + j2);
+		s2.insert(s2.begin() + j2, s1[j1]);
+		s1.erase(s1.begin() + j1);
 
-		if (isValidTruck(graph, s1))
+		if (isValidTruck(graph, s2))
 		{
 			neighborNotFound = false;
 		}
@@ -203,7 +210,7 @@ bool SA::isValidTruck(Graph graph, std::vector<int> s)
 	for (int k = 0; k < s.size(); ++k)
 	{
 		sumD += graph.demand[s[k]];
-		
+
 		if (sumD > graph.capacity)
 		{
 			return false;

@@ -9,6 +9,9 @@ Class for the Simulated Annealing of the TSP
 **/
 class SA
 {
+public:
+	SA();
+	std::vector<std::vector<int>> simulatedAnnealing(Graph graph, EvaluateTour e, std::vector<std::vector<int>> nodes, int kmax, float t, float alpha, float energy_max);
 private:
 	std::vector<std::vector<int>> getNeighbor(Graph graph, std::vector<std::vector<int>> s, int m);
 	float getProbability(float e, float t);
@@ -17,7 +20,4 @@ private:
 	std::vector<std::vector<int>> eraseEmptyTruck(Graph graph, std::vector<std::vector<int>> s);
 	std::vector<std::vector<int>> clientChange(Graph graph, std::vector<std::vector<int>> s);
 	bool isValidTruck(Graph graph, std::vector<int> s);
-
-public:
-	std::vector<std::vector<int>> simulatedAnnealing(Graph graph, EvaluateTour e, std::vector<std::vector<int>> nodes, int kmax, float t, float alpha, float energy_max);
 };
