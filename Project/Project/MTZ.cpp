@@ -15,7 +15,7 @@ void MTZ::compute(Graph *graph) {
 	string name, nameext, nameextsol;
 	int i, j, k;
 
-	int depot = graph->depot; //Reformule with an offset of 1
+	int depot = graph->depot - 1; //Reformule with an offset of 1
 	int Q = graph->capacity;
 
 	vector<int> sol;
@@ -58,7 +58,6 @@ void MTZ::compute(Graph *graph) {
 	IloModel model(env);
 
 
-
 	////////////////////////
 	//////  VAR
 	////////////////////////
@@ -74,6 +73,7 @@ void MTZ::compute(Graph *graph) {
 			x[i * graph->dimension + j].setName(varname.str().c_str());
 		}
 	}
+
 
 	vector<IloNumVar> w;
 	w.resize(graph->dimension);
@@ -94,7 +94,7 @@ void MTZ::compute(Graph *graph) {
 	//list<C_link*>::const_iterator it;
 
 	// Constraints (1) and (2) of MTZ
-
+	
 	IloExpr c1(env);
 	IloExpr c2(env);
 	for (i = 0; i < graph->dimension; i++) {
@@ -109,6 +109,7 @@ void MTZ::compute(Graph *graph) {
 	nbcst++;
 	CC[nbcst].setName("VehiclesIN");
 	nbcst++;
+
 
 	// Constraints (3) and (4) of MTZ
 	for (i = 0; i < graph->dimension; i++) {
@@ -157,7 +158,6 @@ void MTZ::compute(Graph *graph) {
 
 	model.add(CC);
 
-
 	//////////////
 	////// OBJ
 	//////////////
@@ -167,7 +167,6 @@ void MTZ::compute(Graph *graph) {
 	for (i = 0; i < graph->dimension; i++)
 		for (j = 0; j < graph->dimension; j++)
 			obj.setLinearCoef(x[i * graph->dimension + j], graph->distance(i+1,j+1));
-
 
 	///////////
 	//// RESOLUTION
@@ -208,10 +207,11 @@ void MTZ::compute(Graph *graph) {
 	vector<int>   solx;
 	solx.resize(graph->dimension*graph->dimension);
 	for (i = 0; i < graph->dimension; i++) {
-		for (j = 0; j < graph->dimension; j++)
+		for (j = 0; j < graph->dimension; j++) {
 			solx[i * graph->dimension + j] = cplex.getValue(x[i * graph->dimension + j]);
+			//cout << solx[i * graph->dimension + j] << endl;
+		}
 	}
-
 
 	//////////////
 	//////  CPLEX's ENDING
