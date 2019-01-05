@@ -99,8 +99,8 @@ void MTZ::compute(Graph *graph) {
 	IloExpr c2(env);
 	for (i = 0; i < graph->dimension; i++) {
 		if (i != depot) {
-			c1 += x[depot * graph->dimension + i - 1];
-			c2 += x[(i - 1) * graph->dimension + depot];
+			c1 += x[depot * graph->dimension + i];
+			c2 += x[i * graph->dimension + depot];
 		}
 	}
 	CC.add(c1 <= graph->vehicles);
@@ -110,18 +110,19 @@ void MTZ::compute(Graph *graph) {
 	CC[nbcst].setName("VehiclesIN");
 	nbcst++;
 
-
 	// Constraints (3) and (4) of MTZ
 	for (i = 0; i < graph->dimension; i++) {
 		if (i != depot) {
 			IloExpr c3(env);
 			IloExpr c4(env);
 			for (j = 0; j < graph->dimension; j++) {
-				c3 += x[i * graph->dimension + j];
-				c4 += x[j * graph->dimension + i];
+				if (j != i) {
+					c3 += x[i * graph->dimension + j];
+					c4 += x[j * graph->dimension + i];
+				}
 			}
-			CC.add(c3 <= 1);
-			CC.add(c4 <= 1);
+			CC.add(c3 == 1);
+			CC.add(c4 == 1);
 
 			ostringstream nomcst;
 			nomcst.str("");
@@ -145,7 +146,7 @@ void MTZ::compute(Graph *graph) {
 		for (j = 0; j < graph->dimension; j++) {
 			if (j != i) {
 				IloExpr c5(env);
-				c5 += w[i] - w[j] + Q * graph->demand[i] * x[i * graph->dimension + j];
+				c5 += w[i] - w[j] - (Q + graph->demand[i]) * x[i * graph->dimension + j];
 				CC.add(c5 >= -Q);
 				ostringstream nomcst;
 				nomcst.str("");
