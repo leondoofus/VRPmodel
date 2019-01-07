@@ -73,14 +73,14 @@ BP.o: Graph.o BP.h BP.cpp
 EvaluateTour.o: Graph.o EvaluateTour.h EvaluateTour.cpp
 	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) -c EvaluateTour.cpp Graph.o -o EvaluateTour.o
 
-#SA.o: Graph.o EvaluateTour.o BP.o SA.cpp SA.h
-#	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) -c SA.cpp Graph.o EvaluateTour.o BP.o -o SA.o
+SA.o: Graph.o EvaluateTour.o BP.o SA.cpp SA.h
+	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) -c SA.cpp Graph.o EvaluateTour.o BP.o -o SA.o
 
 MTZ.o: Graph.o MTZ.cpp
 	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) MTZ.cpp Graph.o -o MTZ.o
 
-Test: TSP.o BP.o EvaluateTour.o MTZ.o Main.cpp
-	$(CCC) $(CCFLAGS) $(CCLNDIRS) Graph.o TSP.o BP.o EvaluateTour.o MTZ.o Main.cpp -o Test $(CCLNFLAGS)
+Test: TSP.o BP.o EvaluateTour.o SA.o MTZ.o Main.cpp
+	$(CCC) $(CCFLAGS) $(CCLNDIRS) Graph.o TSP.o BP.o EvaluateTour.o SA.o MTZ.o Main.cpp -o Test $(CCLNFLAGS)
 
 clean:
 	rm -f *.o Test
