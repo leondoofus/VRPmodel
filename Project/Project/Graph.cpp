@@ -1,6 +1,8 @@
 #include "Graph.h"
 #include <fstream>
 #include <sstream>
+#include <iostream>
+#include <fstream>
 #include <cmath>
 #include <regex>
 
@@ -73,7 +75,7 @@ Graph::Graph(string filename)
                 lineStream >> tmp[i];
                 i++;
             }
-            
+
 			int key = stoi(tmp[0]);
 			line.erase(0, line.find('\ ') + 1);
 			int x = stoi(tmp[1]);
@@ -153,4 +155,29 @@ bool Graph::computeRelaxedCapacity()
 		sum += demand[i];
 	}
 	return sum <= capacity * vehicles;
+}
+
+void Graph::saveSolution(std::vector<std::vector<int>> sol, string filename)
+{
+	cout << "oki";
+	ofstream myfile;
+	myfile.open(filename);
+	myfile << "COORD\n";
+	for (int i = 1; i <= dimension; i++)
+	{
+		myfile << i << " " << coord[i].x << " " << coord[i].y << "\n";
+	}
+
+	myfile << "TRUCKS\n";
+	for (int i = 0; i < sol.size(); i++)
+	{
+		myfile << i << " ";
+		for (int j = 1; j < sol[i].size() - 1; j++)
+		{
+			myfile << sol[i][j] << " ";
+		}
+		myfile << "\n";
+	}
+
+	myfile.close();
 }

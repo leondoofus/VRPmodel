@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <vector>
 using namespace std;
 
 class Position
@@ -28,4 +29,5 @@ public:
 	void printGraph(void);
 	float distance(int n1, int n2);
 	bool computeRelaxedCapacity();
+	void saveSolution(std::vector<std::vector<int>> sol, string filename);
 };
