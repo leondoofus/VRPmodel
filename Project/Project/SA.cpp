@@ -66,9 +66,9 @@ double SA::getEnergy(Graph graph, EvaluateTour e, std::vector<std::vector<int>> 
 	for (int t = 0; t < sn.size(); t++)
 	{
 		double time = 0.0;
-		for (int i = 1; i < (sn[t].size() - 1); i++)
+		for (int i = 1; i < sn[t].size(); i++)
 		{
-			time += graph.distance(graph.depot, sn[t][i]);
+			time += graph.distance(sn[t][i-1], sn[t][i]);
 		}
 		if (time > graph.maxTime)
 		{
