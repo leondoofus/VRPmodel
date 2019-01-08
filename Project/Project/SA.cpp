@@ -7,6 +7,8 @@
 #include <math.h>
 using namespace std;
 
+#define CONSTRAINT
+
 SA::SA()
 {
 
@@ -19,7 +21,7 @@ std::vector<std::vector<int>> SA::simulatedAnnealing(Graph graph, EvaluateTour e
 	std::vector<std::vector<int>> s = nodes;
 	std::vector<std::vector<int>> g = nodes;
 
-	float energy_s = e.evaluate(graph, nodes) + 100 * nodes.size();
+	float energy_s = getEnergy(graph, e, s);
 	float energy_g = energy_s;
 
 	std::vector<std::vector<int>> sn;
@@ -27,7 +29,7 @@ std::vector<std::vector<int>> SA::simulatedAnnealing(Graph graph, EvaluateTour e
 
 	float temperature = t;
 
-	int m = nodes.size() + 1;
+	int m = graph.vehicles + 2;
 
 	srand(time(NULL));
 
@@ -35,7 +37,7 @@ std::vector<std::vector<int>> SA::simulatedAnnealing(Graph graph, EvaluateTour e
 	while(k < kmax && energy_s > energy_max)
 	{
 		sn = getNeighbor(graph, s, m);
-		energy_sn = e.evaluate(graph, sn) + 100 * sn.size();
+		energy_sn = getEnergy(graph, e, sn);
 
 		if(energy_sn < energy_s || ((double)rand() / (RAND_MAX)) < getProbability(energy_sn-energy_s, temperature))
 		{
@@ -55,6 +57,32 @@ std::vector<std::vector<int>> SA::simulatedAnnealing(Graph graph, EvaluateTour e
 	g = eraseEmptyTruck(graph, g);
 
 	return g;
+}
+
+double SA::getEnergy(Graph graph, EvaluateTour e, std::vector<std::vector<int>> sn)
+{
+	#ifdef CONSTRAINT
+	double nrj = e.evaluate(graph, sn);
+	for (int t = 0; t < sn.size(); t++)
+	{
+		double time = 0.0;
+		for (int i = 1; i < (sn[t].size() - 1); i++)
+		{
+			time += graph.distance(graph.depot, sn[t][i]);
+		}
+		if (time > graph.maxTime)
+		{
+			nrj += delta(time - graph.maxTime);
+		}
+	}
+	return nrj;
+	#endif //CONSTRAINT
+	return e.evaluate(graph, sn) + 100 * std::max(sn.size() - graph.vehicles, (unsigned long long int)0);
+}
+
+double SA::delta(double d)
+{
+	return d;
 }
 
 float SA::getProbability(float e, float t)

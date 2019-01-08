@@ -20,4 +20,6 @@ private:
 	std::vector<std::vector<int>> eraseEmptyTruck(Graph graph, std::vector<std::vector<int>> s);
 	std::vector<std::vector<int>> clientChange(Graph graph, std::vector<std::vector<int>> s);
 	bool isValidTruck(Graph graph, std::vector<int> s);
+	double getEnergy(Graph graph, EvaluateTour e, std::vector<std::vector<int>> sn);
+	double delta(double d);
 };
