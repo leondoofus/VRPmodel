@@ -24,6 +24,7 @@ public:
 	std::map<int, int> demand;
 	int depot;
 	int vehicles;
+	double maxTime;
 
 	Graph(string filename);
 	void printGraph(void);

@@ -114,6 +114,13 @@ Graph::Graph(string filename)
 		}
 		depot = stoi(line);
 		myfile.close();
+
+		maxTime = 0;
+		for (int i=1; i <= dimension; i++)
+		{
+			maxTime += distance(depot, i);
+		}
+		maxTime *= 1.5 / vehicles;
 	}
 	else
 	{
