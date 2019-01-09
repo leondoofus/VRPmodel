@@ -77,7 +77,7 @@ double SA::getEnergy(Graph graph, EvaluateTour e, std::vector<std::vector<int>> 
 	}
 	return nrj;
 	#endif //CONSTRAINT
-	return e.evaluate(graph, sn) + 100 * std::max(sn.size() - graph.vehicles, (unsigned long long int)0);
+	return e.evaluate(graph, sn) + 100 * std::max((int)(sn.size() - graph.vehicles), 0);
 }
 
 double SA::delta(double d)
