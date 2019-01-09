@@ -71,7 +71,7 @@ bool violatedCycle (Graph* G, vector<vector<int>>* solx, vector<vector<int>>* cy
 	return detect;
 }
 
-ILOLAZYCONSTRAINTCALLBACK2(LazyMengerCutSeparation,
+ILOLAZYCONSTRAINTCALLBACK2(LazyWeightCutSeparation,
 			   Graph &, G,			 
 			   vector<vector<IloNumVar>>&,x
 		    ){
@@ -101,13 +101,14 @@ ILOLAZYCONSTRAINTCALLBACK2(LazyMengerCutSeparation,
   		IloExpr cviolated(getEnv());
   		for (j = 0; j < c.size(); j++) {
   			weight += (double)G.demand[j+1];
-			for (int k = 0; k < c.size(); k++) {
-				if (j != k)
-				cviolated += x[j][k];
+			for (int k = 0; k < G.dimension; k++) {
+				if (find(c.begin(), c.end(), k) == c.end())
+					cviolated += x[c.at(j)][k];
 			}
 		}
 		int W = 2 * (int)ceil(weight/(double)G.capacity);
 		IloRange ViolatedCst = IloRange(cviolated >= W);
+		cout << ViolatedCst << endl;
 		add(ViolatedCst,IloCplex::UseCutForce);
   	}
   
@@ -228,15 +229,15 @@ void MTZ::compute(Graph *graph) { //undirected graph
 	}
 
 
-	vector<IloNumVar> w;
-	w.resize(graph->dimension);
-	for (i = 0; i < graph->dimension; i++) {
-		w[i] = IloNumVar(env, 0.0, Q, ILOFLOAT);
-		ostringstream varname;
-		varname.str("");
-		varname << "w_" << i << "_" << j;
-		w[i].setName(varname.str().c_str());
-	}
+	// vector<IloNumVar> w;
+	// w.resize(graph->dimension);
+	// for (i = 0; i < graph->dimension; i++) {
+	// 	w[i] = IloNumVar(env, 0.0, Q, ILOFLOAT);
+	// 	ostringstream varname;
+	// 	varname.str("");
+	// 	varname << "w_" << i << "_" << j;
+	// 	w[i].setName(varname.str().c_str());
+	// }
 
 	//////////////
 	//////  CST
@@ -271,11 +272,11 @@ void MTZ::compute(Graph *graph) { //undirected graph
 			for (j = 0; j < graph->dimension; j++) {
 				if (j != i) {
 					c3 += x[i][j];
-					c4 += x[j][i];
+					//c4 += x[j][i];
 				}
 			}
 			CC.add(c3 == 2);
-			CC.add(c4 == 2);
+			//C.add(c4 == 2);
 
 			ostringstream nomcst;
 			nomcst.str("");
@@ -284,12 +285,12 @@ void MTZ::compute(Graph *graph) { //undirected graph
 			CC[nbcst].setName(nomcst.str().c_str());
 			nbcst++;
 
-			ostringstream nomcst2;
-			nomcst2.str("");
-			nomcst2 << "CstRetailerIN_" << i;
+			// ostringstream nomcst2;
+			// nomcst2.str("");
+			// nomcst2 << "CstRetailerIN_" << i;
 
-			CC[nbcst].setName(nomcst2.str().c_str());
-			nbcst++;
+			// CC[nbcst].setName(nomcst2.str().c_str());
+			// nbcst++;
 		//}
 	}
 
@@ -354,23 +355,24 @@ void MTZ::compute(Graph *graph) { //undirected graph
 	IloCplex cplex(model);
 
 	/// ADD SEPARATION CALLBACK
-	cplex.use(LazyMengerCutSeparation(env,*graph,x));
+	cplex.use(LazyWeightCutSeparation(env,*graph,x));
 
-	// cplex.setParam(IloCplex::Cliques,-1);
-	// cplex.setParam(IloCplex::Covers,-1);
-	// cplex.setParam(IloCplex::DisjCuts,-1);
-	// cplex.setParam(IloCplex::FlowCovers,-1);
-	// cplex.setParam(IloCplex::FlowPaths,-1);
-	// cplex.setParam(IloCplex::FracCuts,-1);
-	// cplex.setParam(IloCplex::GUBCovers,-1);
-	// cplex.setParam(IloCplex::ImplBd,-1);
-	// cplex.setParam(IloCplex::MIRCuts,-1);
-	// cplex.setParam(IloCplex::ZeroHalfCuts,-1);
-	// cplex.setParam(IloCplex::MCFCuts,-1);
-	// cplex.setParam(IloCplex::MIPInterval,1);
-	// cplex.setParam(IloCplex::HeurFreq,-1);
-	// cplex.setParam(IloCplex::ClockType,1);
-	// cplex.setParam(IloCplex::RINSHeur,-1);
+	cplex.setParam(IloCplex::Cliques,-1);
+	cplex.setParam(IloCplex::Covers,-1);
+	cplex.setParam(IloCplex::DisjCuts,-1);
+	cplex.setParam(IloCplex::FlowCovers,-1);
+	cplex.setParam(IloCplex::FlowPaths,-1);
+	cplex.setParam(IloCplex::FracCuts,-1);
+	cplex.setParam(IloCplex::GUBCovers,-1);
+	cplex.setParam(IloCplex::ImplBd,-1);
+	cplex.setParam(IloCplex::MIRCuts,-1);
+	cplex.setParam(IloCplex::ZeroHalfCuts,-1);
+	cplex.setParam(IloCplex::MCFCuts,-1);
+	cplex.setParam(IloCplex::MIPInterval,1);
+	cplex.setParam(IloCplex::HeurFreq,-1);
+	cplex.setParam(IloCplex::ClockType,1);
+	cplex.setParam(IloCplex::RINSHeur,-1);
+	cplex.setParam(IloCplex::Param::MIP::Cuts::LiftProj,-1);
 
 
 	cplex.exportModel("sortie.lp");
@@ -395,7 +397,7 @@ void MTZ::compute(Graph *graph) { //undirected graph
 		for (j = 0; j < graph->dimension; j++) {
 			solx[i][j] = cplex.getValue(x[i][j]);
 			if (solx[i][j])
-			cout << x[i][j].getName() << " " << solx[i][j] << endl;
+				cout << x[i][j].getName() << " " << solx[i][j] << endl;
 		}
 	}
 
