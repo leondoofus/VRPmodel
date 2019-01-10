@@ -1,4 +1,4 @@
-﻿#include "MTZ.h"
+#include "MTZ.h"
 #include <ilcplex/ilocplex.h>
 #include <sstream>
 #include <vector>
@@ -48,7 +48,7 @@ vector<int> getCycleFromIndex (vector<vector<int>> solx, int index)
 	return cycle;
 }
 
-bool violatedCycle (Graph* G, vector<vector<int>>* solx, vector<vector<int>>* cycle)
+bool violatedCycle (Graph* G, vector<vector<int>>* solx, vector<vector<int>>* cycle, vector<vector<int>>* good_cycle)
 {
 	bool detect = false;
 	int i,j;
@@ -65,6 +65,8 @@ bool violatedCycle (Graph* G, vector<vector<int>>* solx, vector<vector<int>>* cy
 				cycle->push_back(c);
 				detect = true;
 			}
+			else
+				good_cycle->push_back(c);
 			checked.insert(checked.end(),c.begin(),c.end());
 		}
 	}
@@ -80,6 +82,7 @@ ILOLAZYCONSTRAINTCALLBACK2(LazyWeightCutSeparation,
   #endif
 
   int i,j;
+  int Q = G.capacity;
   vector<vector<int>> solx;
 	solx.resize(G.dimension);
 	for (i=0;i<G.dimension;i++)
@@ -89,7 +92,9 @@ ILOLAZYCONSTRAINTCALLBACK2(LazyWeightCutSeparation,
 			solx[i][j] = getValue(x[i][j]);
 
   vector<vector<int>> cycle;
-  if (violatedCycle(&G, &solx, &cycle))
+  vector<vector<int>> good_cycle;
+
+  if (violatedCycle(&G, &solx, &cycle, &good_cycle))
   {
   	#ifdef OUTPUT
   	cout << "CYCLE(S) OUTSIDE DETECTED, ADDING " << cycle.size() << " CONSTRAINTS" << endl;
@@ -100,27 +105,74 @@ ILOLAZYCONSTRAINTCALLBACK2(LazyWeightCutSeparation,
   		vector<int> c = cycle.at(i);
   		IloExpr cviolated(getEnv());
   		for (j = 0; j < c.size(); j++) {
-  			weight += (double)G.demand[j+1];
+  			weight += (double)G.demand[c.at(j)+1];
 			for (int k = 0; k < G.dimension; k++) {
 				if (find(c.begin(), c.end(), k) == c.end())
 					cviolated += x[c.at(j)][k];
 			}
 		}
-		int W = 2 * (int)ceil(weight/(double)G.capacity);
+		int W = 2 * (int)ceil(weight/(double)Q);
 		IloRange ViolatedCst = IloRange(cviolated >= W);
-		cout << ViolatedCst << endl;
+		//cout << ViolatedCst << endl;
 		add(ViolatedCst,IloCplex::UseCutForce);
   	}
-  
-  #ifdef OUTPUT
-  cout<<"*********** End Callback *************"<<endl;
-  #endif
   }else{
   	#ifdef OUTPUT
-  	cout << "NO CYCLE OUTSIDE DETECTED, OPTIMAL" << endl;
-  	cout<<"*********** End Callback *************"<<endl;
+  	cout << "NO CYCLE OUTSIDE DETECTED" << endl;
   	#endif
   }
+
+  #ifdef OUTPUT
+  cout << "CHECKING " << good_cycle.size() << " GOOD CYCLE(S) ... " << endl;
+  #endif
+
+  // for (i=0;i<good_cycle.size();i++)
+  // 	{
+  // 		double weight = 0.0;
+  // 		vector<int> c = good_cycle.at(i);
+  // 		if (c.size() == G.dimension) break;
+  // 		IloExpr cviolated(getEnv());
+  // 		for (j = 0; j < G.dimension; j++) {
+  // 			if (find(c.begin(), c.end(), j) == c.end())
+	 //  			weight += (double)G.demand[j+1];
+		// 		for (int k = 0; k < c.size(); k++) {
+		// 				cviolated += x[j][c.at(k)];				}
+		// }
+		// int W = 2 * (int)ceil(weight/(double)Q);
+		// IloRange ViolatedCst = IloRange(cviolated >= W);
+		// //cout << ViolatedCst << endl;
+		// add(ViolatedCst,IloCplex::UseCutForce);
+  // 	}
+
+	// for (i=0;i<good_cycle.size();i++)
+ //  	{
+ //  		int demand = 0;
+ //  		vector<int> c = good_cycle.at(i);
+ //  		for (j = 0; j < c.size(); j++) {
+ //  			demand += G.demand[c.at(j)+1];
+	// 	}
+	// 	if (demand > Q)
+	// 	{
+	// 		#ifdef OUTPUT
+	// 		cout << "ADDING CONSTRAINT" << endl;
+	// 		#endif
+
+	// 		IloExpr cviolated(getEnv());
+	// 		for (j = 0; j < c.size(); j++)
+	// 			for (int k = 0; k < c.size(); k++)
+	// 				cviolated += x[c.at(j)][c.at(k)];
+	// 		int size = 2 * c.size() - 2;
+	// 		IloRange ViolatedCst = IloRange(cviolated <= size);
+	// 		//cout << ViolatedCst << endl;
+	// 		add(ViolatedCst,IloCplex::UseCutForce);
+
+	// 	}
+ //  	}
+
+  	#ifdef OUTPUT
+  	cout<<"*********** End Callback *************"<<endl;
+  	#endif
+
 
   // int i;
   // list<C_link *>::const_iterator it;
@@ -247,51 +299,34 @@ void MTZ::compute(Graph *graph) { //undirected graph
 	int nbcst = 0;
 	//list<C_link*>::const_iterator it;
 
-	// Constraints (1) and (2) of MTZ
+	// Constraint (1)
 	
 	IloExpr c1(env);
-	IloExpr c2(env);
 	for (i = 0; i < graph->dimension; i++) {
 		if (i != depot) {
 			c1 += x[depot][i];
-			c2 += x[i][depot];
 		}
 	}
 	CC.add(c1 <= graph->vehicles);
-	CC.add(c2 <= graph->vehicles);
 	CC[nbcst].setName("VehiclesOUT");
 	nbcst++;
-	CC[nbcst].setName("VehiclesIN");
-	nbcst++;
 
-	// Constraints (3) and (4) of MTZ
+	// Constraints (3)
 	for (i = 0; i < graph->dimension; i++) {
-		//if (i != depot) {
-			IloExpr c3(env);
-			IloExpr c4(env);
-			for (j = 0; j < graph->dimension; j++) {
-				if (j != i) {
-					c3 += x[i][j];
-					//c4 += x[j][i];
-				}
+		IloExpr c3(env);
+		for (j = 0; j < graph->dimension; j++) {
+			if (j != i) {
+				c3 += x[i][j];
 			}
-			CC.add(c3 == 2);
-			//C.add(c4 == 2);
+		}
+		CC.add(c3 == 2);
 
-			ostringstream nomcst;
-			nomcst.str("");
-			nomcst << "CstRetailerOUT_" << i;
+		ostringstream nomcst;
+		nomcst.str("");
+		nomcst << "CstRetailerOUT_" << i;
 
-			CC[nbcst].setName(nomcst.str().c_str());
-			nbcst++;
-
-			// ostringstream nomcst2;
-			// nomcst2.str("");
-			// nomcst2 << "CstRetailerIN_" << i;
-
-			// CC[nbcst].setName(nomcst2.str().c_str());
-			// nbcst++;
-		//}
+		CC[nbcst].setName(nomcst.str().c_str());
+		nbcst++;
 	}
 
 
@@ -312,6 +347,7 @@ void MTZ::compute(Graph *graph) { //undirected graph
 	// }
 
 	// Trivial Constraints
+	// Diagonal = 0
 	for (i = 0; i < graph->dimension; i++) {
 		CC.add(x[i][i] == 0);
 		ostringstream nomcst;
@@ -321,6 +357,7 @@ void MTZ::compute(Graph *graph) { //undirected graph
 		nbcst++;
 	}
 
+	// Symmetry
 	for (i = 0; i < graph->dimension; i++) {
 		for (j = i+1; j < graph->dimension; j++) {
 			IloExpr c7(env);
@@ -345,7 +382,7 @@ void MTZ::compute(Graph *graph) { //undirected graph
 	IloObjective obj = IloAdd(model, IloMinimize(env, 0.0));
 
 	for (i = 0; i < graph->dimension; i++)
-		for (j = 0; j < graph->dimension; j++)
+		for (j = i; j < graph->dimension; j++)
 			obj.setLinearCoef(x[i][j], graph->distance(i+1,j+1));
 
 	///////////
@@ -357,22 +394,22 @@ void MTZ::compute(Graph *graph) { //undirected graph
 	/// ADD SEPARATION CALLBACK
 	cplex.use(LazyWeightCutSeparation(env,*graph,x));
 
-	cplex.setParam(IloCplex::Cliques,-1);
-	cplex.setParam(IloCplex::Covers,-1);
-	cplex.setParam(IloCplex::DisjCuts,-1);
-	cplex.setParam(IloCplex::FlowCovers,-1);
-	cplex.setParam(IloCplex::FlowPaths,-1);
-	cplex.setParam(IloCplex::FracCuts,-1);
-	cplex.setParam(IloCplex::GUBCovers,-1);
-	cplex.setParam(IloCplex::ImplBd,-1);
-	cplex.setParam(IloCplex::MIRCuts,-1);
-	cplex.setParam(IloCplex::ZeroHalfCuts,-1);
-	cplex.setParam(IloCplex::MCFCuts,-1);
-	cplex.setParam(IloCplex::MIPInterval,1);
-	cplex.setParam(IloCplex::HeurFreq,-1);
-	cplex.setParam(IloCplex::ClockType,1);
-	cplex.setParam(IloCplex::RINSHeur,-1);
-	cplex.setParam(IloCplex::Param::MIP::Cuts::LiftProj,-1);
+	// cplex.setParam(IloCplex::Cliques,-1);
+	// cplex.setParam(IloCplex::Covers,-1);
+	// cplex.setParam(IloCplex::DisjCuts,-1);
+	// cplex.setParam(IloCplex::FlowCovers,-1);
+	// cplex.setParam(IloCplex::FlowPaths,-1);
+	// cplex.setParam(IloCplex::FracCuts,-1);
+	// cplex.setParam(IloCplex::GUBCovers,-1);
+	// cplex.setParam(IloCplex::ImplBd,-1);
+	// cplex.setParam(IloCplex::MIRCuts,-1);
+	// cplex.setParam(IloCplex::ZeroHalfCuts,-1);
+	// cplex.setParam(IloCplex::MCFCuts,-1);
+	// cplex.setParam(IloCplex::MIPInterval,1);
+	// cplex.setParam(IloCplex::HeurFreq,-1);
+	// cplex.setParam(IloCplex::ClockType,1);
+	// cplex.setParam(IloCplex::RINSHeur,-1);
+	// cplex.setParam(IloCplex::Param::MIP::Cuts::LiftProj,-1);
 
 
 	cplex.exportModel("sortie.lp");
