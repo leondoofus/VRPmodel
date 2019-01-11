@@ -64,8 +64,8 @@ all: Test
 Graph.o: Graph.cpp Graph.h
 	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) -c Graph.cpp -o Graph.o
 
-TSP.o: Graph.o TSP.h TSP.cpp
-	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) -c TSP.cpp Graph.o -o TSP.o
+TSP.o: Graph.o EvaluateTour.o TSP.h TSP.cpp
+	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) -c TSP.cpp Graph.o EvaluateTour.o -o TSP.o
 
 BP.o: Graph.o BP.h BP.cpp
 	$(CCC) -c -w  $(CCFLAGS) $(CCLNDIRS) -c BP.cpp Graph.o -o BP.o

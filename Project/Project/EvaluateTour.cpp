@@ -17,3 +17,13 @@ float EvaluateTour::evaluate(Graph graph, vector<vector<int>> tours)
 	//cout << "Tours value : " << val << endl;
 	return val;
 }
+
+float EvaluateTour::evaluate(Graph graph, vector<int> tour)
+{
+	float val = 0;
+	for (int it2 = 0; it2 != tour.size() - 1; ++it2)
+		val += graph.distance(tour[it2], tour[it2 + 1]);
+	//cout << "Tour value : " << val << endl;
+	return val;
+}
+
