@@ -27,6 +27,7 @@ int main(void)
 	/*tsp.nearestNeighbor(G, l);*/
 	EvaluateTour e = EvaluateTour();
 	cout << "Tour value : " << e.evaluate(G, l) << endl;
+	G.saveSolution(l, "test");
 
 	/*SA sa = SA();
 	l = sa.simulatedAnnealing(G, e, l, 2000, 1000.0, 0.99, 100.0);

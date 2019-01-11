@@ -10,5 +10,8 @@ public:
 	vector<vector<int>> nearestInsertion(Graph graph, vector<vector<int>> nodes);
 	vector<int> nearest_neighbor(Graph graph, vector<int> nodes);
 	vector<int> nearest_insertion(Graph graph, vector<int> nodes);
-};
+	vector<vector<int>> localSearch (Graph graph, int tabuSize);
+private:
+	vector<vector<int>> bestNeighborSearch (Graph graph, vector<vector<vector<int>>>* tabu)
+;};
 

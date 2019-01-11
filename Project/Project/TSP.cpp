@@ -1,4 +1,5 @@
 #include "TSP.h"
+#include "BP.h"
 
 TSP::TSP()
 {
@@ -97,4 +98,16 @@ vector<vector<int>> TSP::nearestInsertion(Graph graph, vector<vector<int>> nodes
 		cout << endl;
 	}
 	return tours;
+}
+
+vector<vector<int>> TSP::localSearch (Graph graph, int tabuSize)
+{
+	BP bp = BP();
+	vector<vector<int>> preSol = nearestInsertion(graph, bp.firstFitDecreasing(graph));
+	EvaluateTour eval = EvaluateTour();
+	vector<double> score;
+	vector<vector<vector<int>>> taboo;
+	score.push_back(eval.EvaluateTour(graph, preSol));
+	taboo.push_back(preSol);
+	return preSol;
 }
