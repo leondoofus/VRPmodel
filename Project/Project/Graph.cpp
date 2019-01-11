@@ -24,16 +24,26 @@ Graph::Graph(string filename)
 			if(found != string::npos){
 	            std::regex r ("[[:digit:]]+");
 	            std::smatch s;
-	            std::regex_search(line,s,r);
+	            string cut = line.substr(found);
+	            std::regex_search(cut,s,r);
 	            vehicles = stoi(s[0]);
-	         }
+	        }
 	        found = line.find("trucks");
 			if(found != string::npos){
 	            std::regex r ("[[:digit:]]+");
 	            std::smatch s;
-	            std::regex_search(line,s,r);
+	            string cut = line.substr(found);
+	            std::regex_search(cut,s,r);
 	            vehicles = stoi(s[0]);
-	         }
+	        }
+	        found = line.find("Optimal");
+			if(found != string::npos){
+	            std::regex r ("[[:digit:]]+");
+	            std::smatch s;
+	            string cut = line.substr(found);
+	            std::regex_search(cut,s,r);
+	            opt = stoi(s[0]);
+	        }
 			found = line.find("TYPE");
 			if (found != string::npos && type.empty())
 				type = line.substr(7);
@@ -44,14 +54,16 @@ Graph::Graph(string filename)
 			if (found != string::npos){
 				std::regex r ("[[:digit:]]+");
 	            std::smatch s;
-	            std::regex_search(line,s,r);
+	            string cut = line.substr(found);
+	            std::regex_search(cut,s,r);
 	            dimension = stoi(s[0]);
 	        }
 			found = line.find("CAPACITY");
 			if (found != string::npos){
 				std::regex r ("[[:digit:]]+");
 	            std::smatch s;
-	            std::regex_search(line,s,r);
+	            string cut = line.substr(found);
+	            std::regex_search(cut,s,r);
 	            capacity = stoi(s[0]);
 	        }
 			found = line.find("NODE_COORD_SECTION");
@@ -138,16 +150,17 @@ void Graph::printGraph(void)
 	cout << "Dimension : " << dimension << endl;
 	cout << "Capacity : " << capacity << endl;
 	cout << "Node coord :" << endl;
-	for (int i = 1; i <= dimension; i++)
-		cout << i << " " << coord[i].x << " " << coord[i].y << endl;
+	// for (int i = 1; i <= dimension; i++)
+	// 	cout << i << " " << coord[i].x << " " << coord[i].y << endl;
 	cout << "Demand : " << endl;
 	int sum = 0;
-	for (int i = 1; i <= dimension; i++){
-		cout << i << " " << demand[i] << endl;
-		sum += demand[i];
-	}
+	// for (int i = 1; i <= dimension; i++){
+	// 	cout << i << " " << demand[i] << endl;
+	// 	sum += demand[i];
+	// }
 	cout << "Total : " << sum << endl;
 	cout << "Depot : " << depot << endl;
+	cout << "OPT : " << opt << endl;
 }
 
 float Graph::distance(int node1, int node2)

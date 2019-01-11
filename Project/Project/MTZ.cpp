@@ -48,7 +48,7 @@ vector<int> getCycleFromIndex (vector<vector<int>> solx, int index)
 	return cycle;
 }
 
-bool violatedCycle (Graph* G, vector<vector<int>>* solx, vector<vector<int>>* cycle, vector<vector<int>>* good_cycle)
+bool getCycles (Graph* G, vector<vector<int>>* solx, vector<vector<int>>* bad_cycle, vector<vector<int>>* good_cycle)
 {
 	bool detect = false;
 	int i,j;
@@ -62,7 +62,7 @@ bool violatedCycle (Graph* G, vector<vector<int>>* solx, vector<vector<int>>* cy
 			vector<int> c = getCycleFromIndex(*solx, i);
 			if(find(c.begin(), c.end(), 0) == c.end()) //cycle doesn't pass by depot
 			{
-				cycle->push_back(c);
+				bad_cycle->push_back(c);
 				detect = true;
 			}
 			else
@@ -91,18 +91,18 @@ ILOLAZYCONSTRAINTCALLBACK2(LazyWeightCutSeparation,
 		for (j = 0; j < G.dimension; j++)
 			solx[i][j] = getValue(x[i][j]);
 
-  vector<vector<int>> cycle;
+  vector<vector<int>> bad_cycle;
   vector<vector<int>> good_cycle;
 
-  if (violatedCycle(&G, &solx, &cycle, &good_cycle))
+  if (getCycles(&G, &solx, &bad_cycle, &good_cycle))
   {
   	#ifdef OUTPUT
-  	cout << "CYCLE(S) OUTSIDE DETECTED, ADDING " << cycle.size() << " CONSTRAINTS" << endl;
+  	cout << "CYCLE(S) OUTSIDE DETECTED, ADDING " << bad_cycle.size() << " CONSTRAINTS" << endl;
   	#endif
-  	for (i=0;i<cycle.size();i++)
+  	for (i=0;i<bad_cycle.size();i++)
   	{
   		double weight = 0.0;
-  		vector<int> c = cycle.at(i);
+  		vector<int> c = bad_cycle.at(i);
   		IloExpr cviolated(getEnv());
   		for (j = 0; j < c.size(); j++) {
   			weight += (double)G.demand[c.at(j)+1];
@@ -392,7 +392,7 @@ void MTZ::compute(Graph *graph) { //undirected graph
 	IloCplex cplex(model);
 
 	/// ADD SEPARATION CALLBACK
-	cplex.use(LazyWeightCutSeparation(env,*graph,x));
+	//cplex.use(LazyWeightCutSeparation(env,*graph,x));
 
 	// cplex.setParam(IloCplex::Cliques,-1);
 	// cplex.setParam(IloCplex::Covers,-1);
@@ -437,6 +437,8 @@ void MTZ::compute(Graph *graph) { //undirected graph
 				cout << x[i][j].getName() << " " << solx[i][j] << endl;
 		}
 	}
+
+
 
 	//////////////
 	//////  CPLEX's ENDING

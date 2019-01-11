@@ -25,6 +25,7 @@ public:
 	int depot;
 	int vehicles;
 	double maxTime;
+	int opt;
 
 	Graph(string filename);
 	void printGraph(void);
