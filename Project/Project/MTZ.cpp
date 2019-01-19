@@ -106,15 +106,26 @@ ILOLAZYCONSTRAINTCALLBACK2(LazyWeightCutSeparation,
   cout<<"*********** Lazy separation Callback *************"<<endl;
   #endif
 
-  int i,j;
-  int Q = G.capacity;
-  vector<vector<int>> solx;
+	int i,j;
+	int Q = G.capacity;
+	vector<vector<int>> solx;
 	solx.resize(G.dimension);
 	for (i=0;i<G.dimension;i++)
-    	solx[i].resize(G.dimension);
+		solx[i].resize(G.dimension);
 	for (i = 0; i < G.dimension; i++)
 		for (j = 0; j < G.dimension; j++)
 			solx[i][j] = getValue(x[i][j]);
+
+	// for (i = 0; i < G.dimension; i++){
+	// 	if (i<10) cout << i << " ";
+	// 	else cout << i;}
+	// cout <<endl;
+	// for (i = 0; i < G.dimension; i++){
+	// 	for (j = 0; j < G.dimension; j++){
+	// 		cout << solx[i][j] << " ";
+	// 	}
+	// 	cout << endl;
+	// }
 
   vector<vector<int>> bad_cycle;
   vector<vector<int>> good_cycle;
@@ -139,7 +150,7 @@ ILOLAZYCONSTRAINTCALLBACK2(LazyWeightCutSeparation,
 		int W = 2 * (int)ceil(weight/(double)Q);
 		IloRange ViolatedCst = IloRange(cviolated >= W);
 		//cout << ViolatedCst << endl;
-		add(ViolatedCst,IloCplex::UseCutForce);
+		add(ViolatedCst,IloCplex::UseCutPurge);
   	}
   }else{
   	#ifdef OUTPUT
@@ -157,18 +168,18 @@ ILOLAZYCONSTRAINTCALLBACK2(LazyWeightCutSeparation,
   		vector<int> c = good_cycle.at(i);
   		IloExpr cviolated(getEnv());
   		for (j = 0; j < c.size(); j++) {
-  			if (c.at(j)  == 0) continue;
   			weight += (double)G.demand[c.at(j)+1];
-			for (int k = 0; k < G.dimension; k++) {
+			for (int k = 1; k < G.dimension; k++) {
 				if (find(c.begin(), c.end(), k) == c.end())
 					cviolated += x[c.at(j)][k];
 			}
+			cviolated += x[c.at(j)][0];
 		}
 		if (weight > (double)Q) {
 			int W = 2 * (int)ceil(weight/(double)Q);
 			IloRange ViolatedCst = IloRange(cviolated >= W);
 			//cout << ViolatedCst << endl;
-			add(ViolatedCst,IloCplex::UseCutForce);
+			add(ViolatedCst,IloCplex::UseCutPurge);
 			#ifdef OUTPUT
 		  	cout << "Weight = " << weight <<" ADDING 1 CONSTRAINT" << endl;
 		  	#endif
@@ -366,7 +377,7 @@ void MTZ::compute(Graph *graph) { //undirected graph
 	cplex.use(LazyWeightCutSeparation(env,*graph,x));
 
 	// cplex.setParam(IloCplex::Cliques,-1);
-	// cplex.setParam(IloCplex::Covers,-1);
+	cplex.setParam(IloCplex::Covers,-1);
 	// cplex.setParam(IloCplex::DisjCuts,-1);
 	// cplex.setParam(IloCplex::FlowCovers,-1);
 	// cplex.setParam(IloCplex::FlowPaths,-1);
@@ -374,7 +385,7 @@ void MTZ::compute(Graph *graph) { //undirected graph
 	// cplex.setParam(IloCplex::GUBCovers,-1);
 	// cplex.setParam(IloCplex::ImplBd,-1);
 	// cplex.setParam(IloCplex::MIRCuts,-1);
-	// cplex.setParam(IloCplex::ZeroHalfCuts,-1);
+	cplex.setParam(IloCplex::ZeroHalfCuts,-1);
 	// cplex.setParam(IloCplex::MCFCuts,-1);
 	// cplex.setParam(IloCplex::MIPInterval,1);
 	// cplex.setParam(IloCplex::HeurFreq,-1);
@@ -392,7 +403,7 @@ try{
 	}
 }
 catch (IloException& e) {
-  cout << e.getMessage();
+  cerr << e.getMessage();
   e.end();
 }
 
@@ -409,10 +420,27 @@ catch (IloException& e) {
 	for (i = 0; i < graph->dimension; i++) {
 		for (j = 0; j < graph->dimension; j++) {
 			solx[i][j] = cplex.getValue(x[i][j]);
-			if (solx[i][j])
-				cout << x[i][j].getName() << " " << solx[i][j] << endl;
+			// if (solx[i][j])
+			// 	cout << x[i][j].getName() << " " << solx[i][j] << endl;
 		}
 	}
+
+	vector<vector<int>> bad_cycle;
+  	vector<vector<int>> good_cycle;
+
+	getCycles(graph, &solx, &bad_cycle, &good_cycle);
+
+	for (i=0;i<good_cycle.size();i++)
+  	{
+  		double weight = 0.0;
+  		vector<int> c = good_cycle.at(i);
+  		for (j = 0; j < c.size(); j++) {
+  			weight += (double)graph->demand[c.at(j)+1];
+		}
+
+		  	cout << "Weight = " << weight << endl;
+
+  	}
 
 
 
