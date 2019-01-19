@@ -48,6 +48,25 @@ vector<int> getCycleFromIndex (vector<vector<int>> solx, int index)
 	return cycle;
 }
 
+vector<int> getGoodCycleFromIndex (vector<vector<int>> solx, int index)
+{
+	vector<int> cycle;
+	cycle.push_back(0);
+	cycle.push_back(index);
+	int neighbour = getNeighbour(solx.at(cycle.back()), cycle);
+	while (neighbour != -1)
+	{
+		cycle.push_back(neighbour);
+		neighbour = getNeighbour(solx.at(cycle.back()), cycle);
+	}
+	#ifdef OUTPUT
+	cout << "Getting Cycle From " << index << " : ";
+	for (int i=0; i<cycle.size(); i++) cout << cycle.at(i) << " ";
+	cout << endl;
+	#endif
+	return cycle;
+}
+
 bool getCycles (Graph* G, vector<vector<int>>* solx, vector<vector<int>>* bad_cycle, vector<vector<int>>* good_cycle)
 {
 	bool detect = false;
@@ -55,18 +74,24 @@ bool getCycles (Graph* G, vector<vector<int>>* solx, vector<vector<int>>* bad_cy
 
 	vector<int> checked;
 
+	for (i=1;i<G->dimension;i++){
+		if (solx->at(0).at(i) == 1)
+		{
+			if(find(checked.begin(), checked.end(), i) == checked.end()) // i not checked
+			{
+				vector<int> c = getGoodCycleFromIndex(*solx, i);
+				good_cycle->push_back(c);
+				checked.insert(checked.end(),c.begin()+1,c.end());
+			}
+		}
+	}
 	for (i=1;i<G->dimension;i++)
 	{
 		if(find(checked.begin(), checked.end(), i) == checked.end()) // i not checked
 		{
 			vector<int> c = getCycleFromIndex(*solx, i);
-			if(find(c.begin(), c.end(), 0) == c.end()) //cycle doesn't pass by depot
-			{
-				bad_cycle->push_back(c);
-				detect = true;
-			}
-			else
-				good_cycle->push_back(c);
+			bad_cycle->push_back(c);
+			detect = true;
 			checked.insert(checked.end(),c.begin(),c.end());
 		}
 	}
@@ -126,84 +151,29 @@ ILOLAZYCONSTRAINTCALLBACK2(LazyWeightCutSeparation,
   cout << "CHECKING " << good_cycle.size() << " GOOD CYCLE(S) ... " << endl;
   #endif
 
-  // for (i=0;i<good_cycle.size();i++)
-  // 	{
-  // 		double weight = 0.0;
-  // 		vector<int> c = good_cycle.at(i);
-  // 		if (c.size() == G.dimension) break;
-  // 		IloExpr cviolated(getEnv());
-  // 		for (j = 0; j < G.dimension; j++) {
-  // 			if (find(c.begin(), c.end(), j) == c.end())
-	 //  			weight += (double)G.demand[j+1];
-		// 		for (int k = 0; k < c.size(); k++) {
-		// 				cviolated += x[j][c.at(k)];				}
-		// }
-		// int W = 2 * (int)ceil(weight/(double)Q);
-		// IloRange ViolatedCst = IloRange(cviolated >= W);
-		// //cout << ViolatedCst << endl;
-		// add(ViolatedCst,IloCplex::UseCutForce);
-  // 	}
-
-	// for (i=0;i<good_cycle.size();i++)
- //  	{
- //  		int demand = 0;
- //  		vector<int> c = good_cycle.at(i);
- //  		for (j = 0; j < c.size(); j++) {
- //  			demand += G.demand[c.at(j)+1];
-	// 	}
-	// 	if (demand > Q)
-	// 	{
-	// 		#ifdef OUTPUT
-	// 		cout << "ADDING CONSTRAINT" << endl;
-	// 		#endif
-
-	// 		IloExpr cviolated(getEnv());
-	// 		for (j = 0; j < c.size(); j++)
-	// 			for (int k = 0; k < c.size(); k++)
-	// 				cviolated += x[c.at(j)][c.at(k)];
-	// 		int size = 2 * c.size() - 2;
-	// 		IloRange ViolatedCst = IloRange(cviolated <= size);
-	// 		//cout << ViolatedCst << endl;
-	// 		add(ViolatedCst,IloCplex::UseCutForce);
-
-	// 	}
- //  	}
-
-  	#ifdef OUTPUT
-  	cout<<"*********** End Callback *************"<<endl;
-  	#endif
-
-
-  // int i;
-  // list<C_link *>::const_iterator it;
-  // IloRange ViolatedCst;
-  
-  // // Put the INTEGER values x on the edges of graph G
-  // // Be carefull... Cplex can send -0.00001 for 0 or 0.000099 for 1
-
-  // for (i=0;i<G.nb_nodes;i++)
-  //   for (it=G.V_nodes[i].L_adjLinks.begin();it!=G.V_nodes[i].L_adjLinks.end();it++){
-  //     if (i<(*it)->return_other_extrem(i)){
-		// (*it)->algo_cost= getValue(x[i][(*it)->return_other_extrem(i)]);
-		// if((*it)->algo_cost<epsilon) (*it)->algo_cost=0 ;
-		// else (*it)->algo_cost=1 ;
-  //     }
-  //   }
-
-  // /* Separation of Cut inequalities */
-
-  // if (find_ViolatedMengerCutCst_INTEGER(getEnv(),G,x, ViolatedCst)){
-  //   #ifdef OUTPUT
-  //   cout << "Adding constraint : "<<endl;
-  //   cout<< ViolatedCst << endl;
-  //   #endif
-  //   add(ViolatedCst,IloCplex::UseCutPurge);   // UseCutForce UseCutPurge UseCutFilter
-  // }
-  // #ifdef OUTPUT
-  //   else {
-  //     cout<<"No Cst found"<<endl;
-  //   }
-  // #endif 
+  for (i=0;i<good_cycle.size();i++)
+  	{
+  		double weight = 0.0;
+  		vector<int> c = good_cycle.at(i);
+  		IloExpr cviolated(getEnv());
+  		for (j = 0; j < c.size(); j++) {
+  			if (c.at(j)  == 0) continue;
+  			weight += (double)G.demand[c.at(j)+1];
+			for (int k = 0; k < G.dimension; k++) {
+				if (find(c.begin(), c.end(), k) == c.end())
+					cviolated += x[c.at(j)][k];
+			}
+		}
+		if (weight > (double)Q) {
+			int W = 2 * (int)ceil(weight/(double)Q);
+			IloRange ViolatedCst = IloRange(cviolated >= W);
+			//cout << ViolatedCst << endl;
+			add(ViolatedCst,IloCplex::UseCutForce);
+			#ifdef OUTPUT
+		  	cout << "Weight = " << weight <<" ADDING 1 CONSTRAINT" << endl;
+		  	#endif
+		}
+  	}
 
 }
 
@@ -307,12 +277,13 @@ void MTZ::compute(Graph *graph) { //undirected graph
 			c1 += x[depot][i];
 		}
 	}
-	CC.add(c1 <= graph->vehicles);
+	CC.add(c1 <= 2 * graph->vehicles);
 	CC[nbcst].setName("VehiclesOUT");
 	nbcst++;
 
 	// Constraints (3)
 	for (i = 0; i < graph->dimension; i++) {
+		if (i == depot) continue;
 		IloExpr c3(env);
 		for (j = 0; j < graph->dimension; j++) {
 			if (j != i) {
@@ -392,7 +363,7 @@ void MTZ::compute(Graph *graph) { //undirected graph
 	IloCplex cplex(model);
 
 	/// ADD SEPARATION CALLBACK
-	//cplex.use(LazyWeightCutSeparation(env,*graph,x));
+	cplex.use(LazyWeightCutSeparation(env,*graph,x));
 
 	// cplex.setParam(IloCplex::Cliques,-1);
 	// cplex.setParam(IloCplex::Covers,-1);
@@ -414,11 +385,16 @@ void MTZ::compute(Graph *graph) { //undirected graph
 
 	cplex.exportModel("sortie.lp");
 
-
+try{
 	if (!cplex.solve()) {
 		env.error() << "Failed to optimize LP" << endl;
 		exit(1);
 	}
+}
+catch (IloException& e) {
+  cout << e.getMessage();
+  e.end();
+}
 
 
 	env.out() << "Solution status = " << cplex.getStatus() << endl;

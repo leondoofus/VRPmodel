@@ -8,7 +8,7 @@
 
 int main(void)
 {
-	Graph G = Graph("data/A/A-n39-k6.vrp");
+	Graph G = Graph("data/A/A-n32-k5.vrp");
 	G.printGraph();
 	if (G.computeRelaxedCapacity())
 		cout << "Born inf satisfaite" << endl;
@@ -16,23 +16,18 @@ int main(void)
 		cout << "Born inf non satisfaite" << endl;
 	//cout << G.distance(1,5) << endl;
 
-	//BP bp = BP();
+	BP bp = BP();
 	vector<vector<int>> l;
-	//l = bp.firstFitDecreasing(G);
+	l = bp.firstFitDecreasing(G);
 
 
 	/*vector<int> l = {2,3,4};*/
 	TSP tsp = TSP();;
-	//l = tsp.nearestInsertion(G, l);
+	l = tsp.nearestInsertion(G, l);
 	/*tsp.nearestNeighbor(G, l);*/
 	EvaluateTour e = EvaluateTour();
-	//cout << "Tours value : " << e.evaluate(G, l) << endl;
-	
-	e.evaluate(G,{1,30,31,32,1});
-	e.evaluate(G,{1,30,32,31,1});
-	e.evaluate(G,{1,31,30,32,1});
-	cout << "---------" << endl;
-	tsp.localSearch(G, 5);
+	cout << "Tour value : " << e.evaluate(G, l) << endl;
+	G.saveSolution(l, "test");
 
 	/*SA sa = SA();
 	l = sa.simulatedAnnealing(G, e, l, 2000, 1000.0, 0.99, 100.0);
@@ -44,9 +39,8 @@ int main(void)
 				cout << l[it][it2] << " ";
 			cout << endl;
 		}*/
-
 	cout << "----------" << endl;
-	//MTZ mtz;
-	//mtz.compute(&G);
+	MTZ mtz;
+	mtz.compute(&G);
 	return 0;
 }
