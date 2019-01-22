@@ -15,7 +15,7 @@ public:
 private:
 	std::vector<std::vector<int>> getNeighbor(Graph graph, std::vector<std::vector<int>> s, int m);
 	float getProbability(float e, float t);
-	std::vector<std::vector<int>> swapTruck(Graph graph, std::vector<std::vector<int>> s);
+	std::vector<std::vector<int>> swapClient(Graph graph, std::vector<std::vector<int>> s);
 	std::vector<std::vector<int>> addTruck(Graph graph, std::vector<std::vector<int>> s, int m);
 	std::vector<std::vector<int>> eraseEmptyTruck(Graph graph, std::vector<std::vector<int>> s);
 	std::vector<std::vector<int>> clientChange(Graph graph, std::vector<std::vector<int>> s);

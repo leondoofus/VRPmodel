@@ -64,13 +64,13 @@ Graph.o: Graph.cpp Graph.h
 TSP.o: Graph.o EvaluateTour.o TSP.h TSP.cpp
 	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) -c TSP.cpp Graph.o EvaluateTour.o -o TSP.o
 
-BP.o: Graph.o BP.h BP.cpp
+BP.o: Graph.o BP.h BP.cpp defines.h
 	$(CCC) -c -w  $(CCFLAGS) $(CCLNDIRS) -c BP.cpp Graph.o -o BP.o
 
-EvaluateTour.o: Graph.o EvaluateTour.h EvaluateTour.cpp
+EvaluateTour.o: Graph.o EvaluateTour.h EvaluateTour.cpp defines.h
 	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) -c EvaluateTour.cpp Graph.o -o EvaluateTour.o
 
-SA.o: Graph.o EvaluateTour.o BP.o SA.cpp SA.h
+SA.o: Graph.o EvaluateTour.o BP.o SA.cpp SA.h defines.h
 	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) -c SA.cpp Graph.o EvaluateTour.o BP.o -o SA.o
 
 MTZ.o: Graph.o MTZ.cpp

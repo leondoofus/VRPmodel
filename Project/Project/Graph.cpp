@@ -5,6 +5,7 @@
 #include <fstream>
 #include <cmath>
 #include <regex>
+#include <time.h>
 
 
 Graph::Graph(string filename)
@@ -133,6 +134,8 @@ Graph::Graph(string filename)
 			maxTime += distance(depot, i);
 		}
 		maxTime *= 1.5 / vehicles;
+		initClientType();
+		initVehicleType();
 	}
 	else
 	{
@@ -140,6 +143,75 @@ Graph::Graph(string filename)
 	}
 }
 
+void Graph::initClientType(void)
+{
+	srand(time(NULL));
+
+	double r;
+
+	for(int i = 1; i <= dimension; i++)
+	{
+		if (i == depot)
+		{
+			clientType[i] = "empty";
+			//cout << "client " << i << " empty" << endl;
+			continue;
+		}
+		r = ((double)rand() / (RAND_MAX));
+		if(r < 0.15)
+		{
+			clientType[i] = "AB";
+			//cout << "client " << i << " AB" << endl;
+			continue;
+		}
+		if(r < 0.45)
+		{
+			clientType[i] = "A";
+			//cout << "client " << i << " A" << endl;
+			continue;
+		}
+		if(r < 0.75)
+		{
+			clientType[i] = "B";
+			//cout << "client " << i << " B" << endl;
+			continue;
+		}
+		clientType[i] = "empty";
+		cout << "client " << i << " empty" << endl;
+	}
+}
+
+void Graph::initVehicleType(void)
+{
+	int i = 0;
+	int nbVehicles = (int)floor((double)vehicles * 0.2);
+	vector<int> ab;
+	vector<int> a;
+	vector<int> b;
+	vector<int> empty;
+	for (;i<nbVehicles;i++){
+		ab.push_back(i);
+		//cout << "AB " << i << endl;
+	}
+	nbVehicles += (int)floor((double)vehicles * 0.4);
+	for (;i<nbVehicles;i++){
+		a.push_back(i);
+		//cout << "A " << i << endl;
+	}
+	nbVehicles += (int)floor((double)vehicles * 0.4);
+	for (;i<nbVehicles;i++){
+		b.push_back(i);
+		//cout << "B " << i << endl;
+	}
+	for (;i<vehicles;i++){
+		empty.push_back(i);
+		//cout << "empty " << i << endl;
+	}
+	vehicleType["AB"] = ab;
+	vehicleType["A"] = a;
+	vehicleType["B"] = b;
+	vehicleType["empty"] = empty;
+}
 
 void Graph::printGraph(void)
 {
@@ -154,10 +226,10 @@ void Graph::printGraph(void)
 	// 	cout << i << " " << coord[i].x << " " << coord[i].y << endl;
 	cout << "Demand : " << endl;
 	int sum = 0;
-	// for (int i = 1; i <= dimension; i++){
+	 for (int i = 1; i <= dimension; i++){
 	// 	cout << i << " " << demand[i] << endl;
-	// 	sum += demand[i];
-	// }
+	 	sum += demand[i];
+	 }
 	cout << "Total : " << sum << endl;
 	cout << "Depot : " << depot << endl;
 	cout << "OPT : " << opt << endl;
@@ -179,7 +251,6 @@ bool Graph::computeRelaxedCapacity()
 
 void Graph::saveSolution(std::vector<std::vector<int>> sol, string filename)
 {
-	cout << "oki";
 	ofstream myfile;
 	myfile.open(filename);
 	myfile << "COORD\n";
@@ -200,4 +271,30 @@ void Graph::saveSolution(std::vector<std::vector<int>> sol, string filename)
 	}
 
 	myfile.close();
+}
+
+
+float Graph::getReward(int tour, int client)
+{
+	string typeClient = clientType[client];
+	if (typeClient.compare("AB") == 0){
+		if (find(vehicleType["AB"].begin(), vehicleType["AB"].end(), tour) != vehicleType["AB"].end())
+				return 0;
+			return distance(depot,client);
+	}
+	if (typeClient.compare("A") == 0){
+		if (find(vehicleType["AB"].begin(), vehicleType["AB"].end(), tour) != vehicleType["AB"].end())
+				return 0;
+			if (find(vehicleType["A"].begin(), vehicleType["A"].end(), tour) != vehicleType["A"].end())
+				return 0;
+			return distance(depot,client);
+	}
+	if (typeClient.compare("B") == 0){
+		if (find(vehicleType["AB"].begin(), vehicleType["AB"].end(), tour) != vehicleType["AB"].end())
+				return 0;
+			if (find(vehicleType["B"].begin(), vehicleType["B"].end(), tour) != vehicleType["B"].end())
+				return 0;
+			return distance(depot,client);
+	}
+	return 0;
 }

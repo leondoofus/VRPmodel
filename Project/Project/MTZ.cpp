@@ -17,6 +17,7 @@ using namespace std;
 
 int getNeighbour (vector<int> solx, vector<int> cycle)
 {
+	// cout << "backkk " << cycle.back() << endl;
 	int index = distance(solx.begin(),find(solx.begin(), solx.end(), 1));
 	if (find(cycle.begin(), cycle.end(), index) != cycle.end())
 	{
@@ -57,7 +58,7 @@ vector<int> getGoodCycleFromIndex (vector<vector<int>> solx, int index)
 		neighbour = getNeighbour(solx.at(cycle.back()), cycle);
 	}
 	#ifdef OUTPUT
-	// cout << "Getting Cycle From " << index << " : ";
+	//cout << "Getting Cycle From " << index << " : ";
 	for (int i=0; i<cycle.size(); i++) cout << cycle.at(i) << " ";
 	cout << endl;
 	#endif
@@ -263,15 +264,15 @@ void MTZ::compute(Graph *graph) { //undirected graph
 	}
 
 
-	vector<IloNumVar> w;
-	w.resize(graph->dimension);
-	for (i = 0; i < graph->dimension; i++) {
-	 	w[i] = IloNumVar(env, 0.0, Q, ILOFLOAT);
-		ostringstream varname;
-	 	varname.str("");
-		varname << "w_" << i << "_" << j;
-	 	w[i].setName(varname.str().c_str());
-	}
+	// vector<IloNumVar> w;
+	// w.resize(graph->dimension);
+	// for (i = 0; i < graph->dimension; i++) {
+	//  	w[i] = IloNumVar(env, 0.0, Q, ILOFLOAT);
+	// 	ostringstream varname;
+	//  	varname.str("");
+	// 	varname << "w_" << i << "_" << j;
+	//  	w[i].setName(varname.str().c_str());
+	// }
 
 	//////////////
 	//////  CST
@@ -380,7 +381,7 @@ void MTZ::compute(Graph *graph) { //undirected graph
 	IloObjective obj = IloAdd(model, IloMinimize(env, 0.0));
 
 	for (i = 0; i < graph->dimension; i++)
-		for (j = i; j < graph->dimension; j++)
+		for (j = 0; j < graph->dimension; j++)
 			obj.setLinearCoef(x[i][j], graph->distance(i+1,j+1));
 
 	///////////
@@ -390,7 +391,7 @@ void MTZ::compute(Graph *graph) { //undirected graph
 	IloCplex cplex(model);
 
 	/// ADD SEPARATION CALLBACK
-	cplex.use(LazyWeightCutSeparation(env,*graph,x));
+	 cplex.use(LazyWeightCutSeparation(env,*graph,x));
 
 	// cplex.setParam(IloCplex::Cliques,-1);
 	// cplex.setParam(IloCplex::Covers,-1);

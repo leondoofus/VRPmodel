@@ -26,10 +26,17 @@ public:
 	int vehicles;
 	double maxTime;
 	int opt;
+	std::map<int, string> clientType;
+	std::map<string, vector<int>> vehicleType;
 
 	Graph(string filename);
 	void printGraph(void);
 	float distance(int n1, int n2);
 	bool computeRelaxedCapacity();
 	void saveSolution(std::vector<std::vector<int>> sol, string filename);
+	float getReward(int tour, int client);
+private:
+	void initClientType();
+	void initVehicleType();
+
 };

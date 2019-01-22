@@ -1,3 +1,4 @@
+#include "defines.h"
 #include "SA.h"
 #include "BP.h"
 #include <algorithm>
@@ -6,8 +7,6 @@
 #include <time.h>
 #include <math.h>
 using namespace std;
-
-#define CONSTRAINT
 
 SA::SA()
 {
@@ -61,7 +60,7 @@ std::vector<std::vector<int>> SA::simulatedAnnealing(Graph graph, EvaluateTour e
 
 double SA::getEnergy(Graph graph, EvaluateTour e, std::vector<std::vector<int>> sn)
 {
-	#ifdef CONSTRAINT
+	#ifdef WORKINGTIME
 	double nrj = e.evaluate(graph, sn);
 	for (int t = 0; t < sn.size(); t++)
 	{
@@ -76,7 +75,7 @@ double SA::getEnergy(Graph graph, EvaluateTour e, std::vector<std::vector<int>> 
 		}
 	}
 	return nrj;
-	#endif //CONSTRAINT
+	#endif
 	return e.evaluate(graph, sn) + 100 * std::max((int)(sn.size() - graph.vehicles), 0);
 }
 
@@ -101,7 +100,7 @@ std::vector<std::vector<int>> SA::getNeighbor(Graph graph, std::vector<std::vect
 
 	if (r < 2/3.0)
 	{
-		return swapTruck(graph, s);
+		return swapClient(graph, s);
 	}
 
 	if (r < 5/6.0)
@@ -117,7 +116,7 @@ std::vector<std::vector<int>> SA::getNeighbor(Graph graph, std::vector<std::vect
 	return s;
 }
 
-std::vector<std::vector<int>> SA::swapTruck(Graph graph, std::vector<std::vector<int>> s)
+std::vector<std::vector<int>> SA::swapClient(Graph graph, std::vector<std::vector<int>> s)
 {
 	int i;
 	int j1;

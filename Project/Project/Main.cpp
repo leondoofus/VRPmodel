@@ -9,7 +9,7 @@
 
 int main(void)
 {
-	Graph G = Graph("data/A/A-n32-k5.vrp");
+	Graph G = Graph("data/P/P-n16-k8.vrp");
 	G.printGraph();
 	if (G.computeRelaxedCapacity())
 		cout << "Born inf satisfaite" << endl;
@@ -20,6 +20,7 @@ int main(void)
 	BP bp = BP();
 	vector<vector<int>> l;
 	l = bp.firstFitDecreasing(G);
+	cout << "iciiiiiiiiiiiiiiii" << endl;
 
 
 	/*vector<int> l = {2,3,4};*/
@@ -30,7 +31,7 @@ int main(void)
 	cout << "Tour value : " << e.evaluate(G, l) << endl;
 	G.saveSolution(l, "test");
 
-	/*SA sa = SA();
+	SA sa = SA();
 	l = sa.simulatedAnnealing(G, e, l, 2000, 1000.0, 0.99, 100.0);
 	cout << e.evaluate(G, l) << endl;
 	for (int it = 0; it != l.size(); ++it)
@@ -39,7 +40,7 @@ int main(void)
 			for (int it2 = 0; it2 != l[it].size(); ++it2)
 				cout << l[it][it2] << " ";
 			cout << endl;
-		}*/
+		}
 	cout << "----------" << endl;
 	MTZ mtz;
 	mtz.compute(&G);
