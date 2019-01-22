@@ -17,15 +17,8 @@ int main(void)
 		cout << "Born inf non satisfaite" << endl;
 	//cout << G.distance(1,5) << endl;
 
-	BP bp = BP();
-	vector<vector<int>> l;
-	l = bp.firstFitDecreasing(G);
-	cout << "iciiiiiiiiiiiiiiii" << endl;
+	vector<vector<int>> l = tsp.localSearch(G,5);
 
-
-	/*vector<int> l = {2,3,4};*/
-	TSP tsp = TSP();;
-	l = tsp.nearestInsertion(G, l);
 	/*tsp.nearestNeighbor(G, l);*/
 	EvaluateTour e = EvaluateTour();
 	cout << "Tour value : " << e.evaluate(G, l) << endl;
@@ -42,8 +35,8 @@ int main(void)
 			cout << endl;
 		}
 	cout << "----------" << endl;
-	MTZ mtz;
-	mtz.compute(&G);
+	// MTZ mtz;
+	// mtz.compute(&G);
 	// Csol csol;
 	// csol.compute(&G);
 	return 0;

@@ -154,26 +154,26 @@ void Graph::initClientType(void)
 		if (i == depot)
 		{
 			clientType[i] = "empty";
-			//cout << "client " << i << " empty" << endl;
+			cout << "client " << i << " empty" << endl;
 			continue;
 		}
 		r = ((double)rand() / (RAND_MAX));
 		if(r < 0.15)
 		{
 			clientType[i] = "AB";
-			//cout << "client " << i << " AB" << endl;
+			cout << "client " << i << " AB" << endl;
 			continue;
 		}
 		if(r < 0.45)
 		{
 			clientType[i] = "A";
-			//cout << "client " << i << " A" << endl;
+			cout << "client " << i << " A" << endl;
 			continue;
 		}
 		if(r < 0.75)
 		{
 			clientType[i] = "B";
-			//cout << "client " << i << " B" << endl;
+			cout << "client " << i << " B" << endl;
 			continue;
 		}
 		clientType[i] = "empty";
@@ -191,21 +191,21 @@ void Graph::initVehicleType(void)
 	vector<int> empty;
 	for (;i<nbVehicles;i++){
 		ab.push_back(i);
-		//cout << "AB " << i << endl;
+		cout << "AB " << i << endl;
 	}
 	nbVehicles += (int)floor((double)vehicles * 0.4);
 	for (;i<nbVehicles;i++){
 		a.push_back(i);
-		//cout << "A " << i << endl;
+		cout << "A " << i << endl;
 	}
 	nbVehicles += (int)floor((double)vehicles * 0.4);
 	for (;i<nbVehicles;i++){
 		b.push_back(i);
-		//cout << "B " << i << endl;
+		cout << "B " << i << endl;
 	}
 	for (;i<vehicles;i++){
 		empty.push_back(i);
-		//cout << "empty " << i << endl;
+		cout << "empty " << i << endl;
 	}
 	vehicleType["AB"] = ab;
 	vehicleType["A"] = a;

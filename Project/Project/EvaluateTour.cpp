@@ -16,15 +16,29 @@ float EvaluateTour::evaluate(Graph graph, vector<vector<int>> tours)
 		for (int it2 = 1; it2 != tours[it].size() - 1; ++it2){
 			val += graph.distance(tours[it][it2], tours[it][it2 + 1]);
 			#ifdef COMPETENCE
-				val += graph.getReward(it,tours[it][it2 + 1]);
+				val += 3*graph.getReward(it,tours[it][it2 + 1]);
 			#endif
 		}
 	}
+	#ifdef WORKINGTIME
+		for (int t = 0; t < tours.size(); t++)
+		{
+			double time = 0.0;
+			for (int i = 1; i < tours[t].size(); i++)
+			{
+				time += graph.distance(tours[t][i-1], tours[t][i]);
+			}
+			if (time > graph.maxTime)
+			{
+				val += time - graph.maxTime;
+			}
+		}
+	#endif
 	//cout << "Tours value : " << val << endl;
 	return val;
 }
 
-float EvaluateTour::evaluate(Graph graph, vector<int> tour)
+float EvaluateTour::evaluate(Graph graph, vector<int> tour) //local
 {
 	float val = 0;
 	for (int it2 = 0; it2 != tour.size() - 1; ++it2)
@@ -32,4 +46,3 @@ float EvaluateTour::evaluate(Graph graph, vector<int> tour)
 	//cout << "Tour value : " << val << endl;
 	return val;
 }
-

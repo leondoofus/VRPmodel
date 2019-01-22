@@ -92,6 +92,7 @@ std::vector<std::vector<int>> BP::firstFitDecreasing(Graph graph)
 std::vector<std::vector<int>> BP::firstFitDecreasingService(Graph graph)
 {
 		std::vector<int> decreasingOrder = getDecreasingOrder(graph.demand, graph.dimension);
+		cout << decreasingOrder.size() << endl;
 		std::vector<std::vector<int>> allocation;
 		std::vector<int> weights;
 
@@ -129,6 +130,11 @@ std::vector<std::vector<int>> BP::firstFitDecreasingService(Graph graph)
 				continue;
 			}
 		}
+
+		cout << vab.size() << endl;
+		cout << va.size() << endl;
+		cout << vb.size() << endl;
+		cout << ve.size() << endl;
 
 		for (int i = 0; i<graph.vehicles; i++){
 			vector<int> tmp;
@@ -168,7 +174,7 @@ std::vector<std::vector<int>> BP::firstFitDecreasingService(Graph graph)
 					break;
 				}
 			}
-			if (!demandAdded) rest.push_back(vab[v]);
+			if (!demandAdded) rest.push_back(va[v]);
 		}
 		for (int v=0; v<vb.size();v++)
 		{
@@ -183,11 +189,12 @@ std::vector<std::vector<int>> BP::firstFitDecreasingService(Graph graph)
 					break;
 				}
 			}
-			if (!demandAdded) rest.push_back(vab[v]);
+			if (!demandAdded) rest.push_back(vb[v]);
 		}
 
 		rest.insert(rest.end(),ve.begin(),ve.end());
 		
+
 		/* for every demands i */
 		for (int i = 0; i < rest.size(); ++i)
 		{
@@ -220,7 +227,8 @@ std::vector<std::vector<int>> BP::firstFitDecreasingService(Graph graph)
 		// {
 		// 	cout << "----------" << endl;
 		// 	for (int it2 = 0; it2 != allocation[it].size(); ++it2)
-		// 		cout << allocation[it][it2] << endl;
+		// 		cout << allocation[it][it2] << " ";
+		// 	cout << endl;
 		// }
 		return allocation;
 }

@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#include <string>
 using namespace std;
 
 SA::SA()
@@ -60,29 +61,9 @@ std::vector<std::vector<int>> SA::simulatedAnnealing(Graph graph, EvaluateTour e
 
 double SA::getEnergy(Graph graph, EvaluateTour e, std::vector<std::vector<int>> sn)
 {
-	#ifdef WORKINGTIME
-	double nrj = e.evaluate(graph, sn);
-	for (int t = 0; t < sn.size(); t++)
-	{
-		double time = 0.0;
-		for (int i = 1; i < sn[t].size(); i++)
-		{
-			time += graph.distance(sn[t][i-1], sn[t][i]);
-		}
-		if (time > graph.maxTime)
-		{
-			nrj += delta(time - graph.maxTime);
-		}
-	}
-	return nrj;
-	#endif
 	return e.evaluate(graph, sn) + 100 * std::max((int)(sn.size() - graph.vehicles), 0);
 }
 
-double SA::delta(double d)
-{
-	return d;
-}
 
 float SA::getProbability(float e, float t)
 {
@@ -217,11 +198,22 @@ std::vector<std::vector<int>> SA::clientChange(Graph graph, std::vector<std::vec
 		s2.insert(s2.begin() + j2, s1[j1]);
 		s1.erase(s1.begin() + j1);
 
+
+		// #ifdef COMPETENCE
+		// 	if (isValidTruckService(graph, s2, i2,s1[j1]))
+		// 	{
+		// 		neighborNotFound = false;
+		// 	}
+		// #else
+		// 	if (isValidTruck(graph, s2))
+		// 	{
+		// 		neighborNotFound = false;
+		// 	}
+		// #endif
 		if (isValidTruck(graph, s2))
 		{
 			neighborNotFound = false;
 		}
-
 	}
 
 	sn[i1] = s1;
@@ -231,6 +223,50 @@ std::vector<std::vector<int>> SA::clientChange(Graph graph, std::vector<std::vec
 }
 
 bool SA::isValidTruck(Graph graph, std::vector<int> s)
+{
+	int sumD = 0;
+
+	for (int k = 0; k < s.size(); ++k)
+	{
+		sumD += graph.demand[s[k]];
+
+		if (sumD > graph.capacity)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool SA::isValidTruckService(Graph graph, std::vector<int> s, int tour, int elem)
+{
+	string typeClient = graph.clientType[elem];
+
+	if (typeClient.compare("AB") == 0){
+		if (find(graph.vehicleType["AB"].begin(), graph.vehicleType["AB"].end(), tour) != graph.vehicleType["AB"].end())
+			return checkCapacity(graph, s);
+		else return false;
+	}
+	if (typeClient.compare("A") == 0){
+		if (find(graph.vehicleType["AB"].begin(), graph.vehicleType["AB"].end(), tour) != graph.vehicleType["AB"].end())
+				return checkCapacity(graph, s);
+		if (find(graph.vehicleType["A"].begin(), graph.vehicleType["A"].end(), tour) != graph.vehicleType["A"].end())
+				return checkCapacity(graph, s);
+		return false;
+	}
+	if (typeClient.compare("B") == 0){
+		if (find(graph.vehicleType["AB"].begin(), graph.vehicleType["AB"].end(), tour) != graph.vehicleType["AB"].end())
+			return checkCapacity(graph, s);
+		if (find(graph.vehicleType["B"].begin(), graph.vehicleType["B"].end(), tour) != graph.vehicleType["B"].end())
+			return checkCapacity(graph, s);
+		return false;
+	}
+	return checkCapacity(graph, s);
+}
+
+
+bool SA::checkCapacity(Graph graph, std::vector<int> s)
 {
 	int sumD = 0;
 
