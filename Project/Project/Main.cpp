@@ -4,6 +4,7 @@
 #include "SA.h"
 //#include "EvaluateTour.h"
 #include "MTZ.h"
+//#include "Csol.h"
 #include <iostream>     // std::cout
 
 int main(void)
@@ -42,5 +43,7 @@ int main(void)
 	cout << "----------" << endl;
 	MTZ mtz;
 	mtz.compute(&G);
+	// Csol csol;
+	// csol.compute(&G);
 	return 0;
 }

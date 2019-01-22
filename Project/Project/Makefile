@@ -10,7 +10,6 @@
 
 CPLEXDIR      = $(PATHTUTOMIP)/cplex-12.7.1/cplex
 CONCERTDIR    = $(PATHTUTOMIP)/cplex-12.7.1/concert
-LEMONDIR      = $(PATHTUTOMIP)/lemon-1.3.1
 
 
 SYSTEM     = x86-64_linux
@@ -37,18 +36,16 @@ CCOPT = -m64 -O -fPIC -fno-strict-aliasing -fexceptions -DNDEBUG -DIL_STD
 CPLEXBINDIR   = $(CPLEXDIR)/bin/$(BINDIST)
 CPLEXLIBDIR   = $(CPLEXDIR)/lib/$(SYSTEM)/$(LIBFORMAT)
 CONCERTLIBDIR = $(CONCERTDIR)/lib/$(SYSTEM)/$(LIBFORMAT)
-LEMONLIBDIR	= $(LEMONDIR)/lib
 
-CCLNDIRS  = -L$(CPLEXLIBDIR) -L$(CONCERTLIBDIR) -L$(LEMONLIBDIR)
+CCLNDIRS  = -L$(CPLEXLIBDIR) -L$(CONCERTLIBDIR)
 
 
 CONCERTINCDIR = $(CONCERTDIR)/include
 CPLEXINCDIR   = $(CPLEXDIR)/include
-LEMONINCDIR   = $(LEMONDIR)/include
 
-CCLNFLAGS = -lconcert -lilocplex -lcplex -lemon -lm -lpthread
+CCLNFLAGS = -lconcert -lilocplex -lcplex -lm -lpthread
 
-CCFLAGS = $(CCOPT) -I$(CPLEXINCDIR) -I$(CONCERTINCDIR) -I$(LEMONINCDIR)
+CCFLAGS = $(CCOPT) -I$(CPLEXINCDIR) -I$(CONCERTINCDIR)
 
 
 
@@ -79,8 +76,14 @@ SA.o: Graph.o EvaluateTour.o BP.o SA.cpp SA.h
 MTZ.o: Graph.o MTZ.cpp
 	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) MTZ.cpp Graph.o -o MTZ.o
 
+Csol.o: Graph.o Csol.cpp
+	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) Csol.cpp Graph.o -o Csol.o
+
 Test: TSP.o BP.o EvaluateTour.o SA.o MTZ.o Main.cpp
 	$(CCC) $(CCFLAGS) $(CCLNDIRS) Graph.o TSP.o BP.o EvaluateTour.o SA.o MTZ.o Main.cpp -o Test $(CCLNFLAGS)
+
+#Test: TSP.o BP.o EvaluateTour.o SA.o Csol.o Main.cpp
+#	$(CCC) $(CCFLAGS) $(CCLNDIRS) Graph.o TSP.o BP.o EvaluateTour.o SA.o Csol.o Main.cpp -o Test $(CCLNFLAGS)
 
 clean:
 	rm -f *.o Test

@@ -1,4 +1,4 @@
-#include "MTZ.h"
+#include "Csol.h"
 #include <ilcplex/ilocplex.h>
 #include <sstream>
 #include <vector>
@@ -20,14 +20,18 @@ int getNeighbour (vector<int> solx, vector<int> cycle)
 	int index = distance(solx.begin(),find(solx.begin(), solx.end(), 1));
 	if (find(cycle.begin(), cycle.end(), index) != cycle.end())
 	{
-		return -1;
+		index = distance(solx.begin(),find(solx.begin()+index+1, solx.end(), 1));
+		if (find(cycle.begin(), cycle.end(), index) != cycle.end())
+		{
+			return -1;
+		}
+		return index;
 	}
 	return index;
 }
 
 vector<int> getCycleFromIndex (vector<vector<int>> solx, int index)
 {
-	// cout << "Getting Cycle From " << index << " : ";
 	vector<int> cycle;
 	cycle.push_back(index);
 	int neighbour = getNeighbour(solx.at(cycle.back()), cycle);
@@ -46,7 +50,6 @@ vector<int> getCycleFromIndex (vector<vector<int>> solx, int index)
 
 vector<int> getGoodCycleFromIndex (vector<vector<int>> solx, int index)
 {
-	cout << "Getting Cycle From " << index << " : ";
 	vector<int> cycle;
 	cycle.push_back(0);
 	cycle.push_back(index);
@@ -57,7 +60,7 @@ vector<int> getGoodCycleFromIndex (vector<vector<int>> solx, int index)
 		neighbour = getNeighbour(solx.at(cycle.back()), cycle);
 	}
 	#ifdef OUTPUT
-	// cout << "Getting Cycle From " << index << " : ";
+	cout << "Getting Cycle From " << index << " : ";
 	for (int i=0; i<cycle.size(); i++) cout << cycle.at(i) << " ";
 	cout << endl;
 	#endif
@@ -140,22 +143,21 @@ ILOLAZYCONSTRAINTCALLBACK2(LazyWeightCutSeparation,
   		for (j = 0; j < c.size(); j++) {
   			weight += (double)G.demand[c.at(j)+1];
 			for (int k = 0; k < G.dimension; k++) {
-				if (find(c.begin(), c.end(), k) == c.end())
+				if (find(c.begin(), c.end(), k) == c.end()){
 					cviolated += x[c.at(j)][k];
+				}
 			}
 		}
-		int W = (int)ceil(weight/(double)Q);
+		int W = 2 * (int)ceil(weight/(double)Q);
 		IloRange ViolatedCst = IloRange(cviolated >= W);
 		//cout << ViolatedCst << endl;
-		add(ViolatedCst,IloCplex::UseCutPurge);
+		add(ViolatedCst,IloCplex::UseCutForce);
   	}
   }else{
   	#ifdef OUTPUT
   	cout << "NO CYCLE OUTSIDE DETECTED" << endl;
   	#endif
   }
-	cout << "bad size " << bad_cycle.size() << endl;
-	cout << "good size " << good_cycle.size() << endl;
 
   #ifdef OUTPUT
   cout << "CHECKING " << good_cycle.size() << " GOOD CYCLE(S) ... " << endl;
@@ -163,29 +165,62 @@ ILOLAZYCONSTRAINTCALLBACK2(LazyWeightCutSeparation,
 
   for (i=0;i<good_cycle.size();i++)
   	{
+  		int intTol = 0;
   		double weight = 0.0;
   		vector<int> c = good_cycle.at(i);
   		IloExpr cviolated(getEnv());
-  		for (j = 1; j < c.size(); j++) {
+  		for (j = 0; j < c.size(); j++) {
   			weight += (double)G.demand[c.at(j)+1];
 			for (int k = 0; k < G.dimension; k++) {
-				if (k == 0) cviolated += x[c.at(j)][k];
-				else {
-					if (find(c.begin(), c.end(), k) == c.end())
-						cviolated += x[c.at(j)][k];
+				if (find(c.begin(), c.end(), k) == c.end()){
+					cviolated += x[c.at(j)][k];
+					intTol += getValue(x[c.at(j)][k]);
 				}
 			}
 		}
 		if (weight > (double)Q) {
-			int W = (int)ceil(weight/(double)Q);
+			int W = 2 * (int)ceil(weight/(double)Q);
 			IloRange ViolatedCst = IloRange(cviolated >= W);
-			//cout << ViolatedCst << endl;
-			add(ViolatedCst,IloCplex::UseCutPurge);
+			// cout << ViolatedCst << endl;
+			add(ViolatedCst,IloCplex::UseCutForce);
 			#ifdef OUTPUT
 		  	cout << "Weight = " << weight <<" ADDING 1 CONSTRAINT" << endl;
+		  	cout << "intTol " << intTol << endl;
 		  	#endif
 		}
   	}
+
+  // 	for (i=0;i<good_cycle.size();i++)
+  // 	{
+  // 		cout << "Begin" << endl;
+  // 		int intTol = 0;
+  // 		double weight = 0.0;
+  // 		vector<int> c = good_cycle.at(i);
+  // 		IloExpr cviolated(getEnv());
+  // 		for (j = 0; j < c.size(); j++) {
+  // 			weight += (double)G.demand[c.at(j)+1];
+		// 	for (int k = 1; k < G.dimension; k++) {
+		// 		if (find(c.begin(), c.end(), k) == c.end()){
+		// 			cviolated += x[c.at(j)][k];
+		// 			intTol += getValue(x[c.at(j)][k]);
+		// 			if (getValue(x[c.at(j)][k]) == 1) cout << "ici j k " << c.at(j) << " " << k << endl;
+		// 		}
+		// 	}
+		// 	cviolated += x[c.at(j)][0];
+		// 	intTol += getValue(x[c.at(j)][0]);
+		// 	if (getValue(x[c.at(j)][0]) == 1) cout << "ici j k " << c.at(j) << " 0" << endl;
+		// }
+		// if (weight > (double)Q) {
+		// 	int W = 2 * (int)ceil(weight/(double)Q);
+		// 	IloRange ViolatedCst = IloRange(cviolated >= W);
+		// 	cout << ViolatedCst << endl;
+		// 	add(ViolatedCst,IloCplex::UseCutForce);
+		// 	#ifdef OUTPUT
+		//   	cout << "Weight = " << weight <<" ADDING 1 CONSTRAINT" << endl;
+		//   	cout << "intTol " << intTol << endl;
+		//   	#endif
+		// }
+  // 	}
 
 }
 
@@ -196,7 +231,7 @@ ILOLAZYCONSTRAINTCALLBACK2(LazyWeightCutSeparation,
 
 
 
-void MTZ::compute(Graph *graph) { //undirected graph
+void Csol::compute(Graph *graph) { //undirected graph
 	string name, nameext, nameextsol;
 	int i, j, k;
 
@@ -263,15 +298,15 @@ void MTZ::compute(Graph *graph) { //undirected graph
 	}
 
 
-	vector<IloNumVar> w;
-	w.resize(graph->dimension);
-	for (i = 0; i < graph->dimension; i++) {
-	 	w[i] = IloNumVar(env, 0.0, Q, ILOFLOAT);
-		ostringstream varname;
-	 	varname.str("");
-		varname << "w_" << i << "_" << j;
-	 	w[i].setName(varname.str().c_str());
-	}
+	// vector<IloNumVar> w;
+	// w.resize(graph->dimension);
+	// for (i = 0; i < graph->dimension; i++) {
+	//  	w[i] = IloNumVar(env, 0.0, Q, ILOFLOAT);
+	// 	ostringstream varname;
+	//  	varname.str("");
+	// 	varname << "w_" << i << "_" << j;
+	//  	w[i].setName(varname.str().c_str());
+	// }
 
 	//////////////
 	//////  CST
@@ -284,32 +319,32 @@ void MTZ::compute(Graph *graph) { //undirected graph
 	// Constraint (1)
 	
 	IloExpr c1(env);
-	IloExpr c2(env);
+	//IloExpr c2(env);
 	for (i = 0; i < graph->dimension; i++) {
 		if (i != depot) {
 			c1 += x[depot][i];
-			c2 += x[i][depot];
+			//c2 += x[i][depot];
 		}
 	}
-	CC.add(c1 <= graph->vehicles);
+	CC.add(c1 <= 2 * graph->vehicles);
 	CC[nbcst].setName("VehiclesOUT");
 	nbcst++;
-	CC.add(c2 <= graph->vehicles);
-	CC[nbcst].setName("VehiclesIN");
-	nbcst++;
+	// CC.add(c2 <= graph->vehicles);
+	// CC[nbcst].setName("VehiclesIN");
+	// nbcst++;
 
 	// Constraints (3)
 	for (i = 0; i < graph->dimension; i++) {
 		if (i == depot) continue;
 		IloExpr c3(env);
-		IloExpr c4(env);
+		//IloExpr c4(env);
 		for (j = 0; j < graph->dimension; j++) {
 			if (j != i) {
 				c3 += x[i][j];
-				c4 += x[j][i];
+				//c4 += x[j][i];
 			}
 		}
-		CC.add(c3 == 1);
+		CC.add(c3 == 2);
 
 		ostringstream nomcst;
 		nomcst.str("");
@@ -318,13 +353,13 @@ void MTZ::compute(Graph *graph) { //undirected graph
 		CC[nbcst].setName(nomcst.str().c_str());
 		nbcst++;
 
-		CC.add(c4 == 1);
+		// CC.add(c4 == 1);
 
-		nomcst.str("");
-		nomcst << "CstRetailerIN_" << i;
+		// nomcst.str("");
+		// nomcst << "CstRetailerIN_" << i;
 
-		CC[nbcst].setName(nomcst.str().c_str());
-		nbcst++;
+		// CC[nbcst].setName(nomcst.str().c_str());
+		// nbcst++;
 	}
 
 
@@ -356,18 +391,18 @@ void MTZ::compute(Graph *graph) { //undirected graph
 	}
 
 	// Symmetry
-	// for (i = 0; i < graph->dimension; i++) {
-	// 	for (j = i+1; j < graph->dimension; j++) {
-	// 		IloExpr c7(env);
-	// 		c7 += x[i][j] - x[j][i];
-	// 		CC.add(c7 == 0);
-	// 		ostringstream nomcst;
-	// 		nomcst.str("");
-	// 		nomcst << "CstT2_" << i << "_" << j;
-	// 		CC[nbcst].setName(nomcst.str().c_str());
-	// 		nbcst++;
-	// 	}
-	// }
+	for (i = 0; i < graph->dimension; i++) {
+		for (j = i+1; j < graph->dimension; j++) {
+			IloExpr c7(env);
+			c7 += x[i][j] - x[j][i];
+			CC.add(c7 == 0);
+			ostringstream nomcst;
+			nomcst.str("");
+			nomcst << "CstT2_" << i << "_" << j;
+			CC[nbcst].setName(nomcst.str().c_str());
+			nbcst++;
+		}
+	}
 
 
 	model.add(CC);
@@ -380,7 +415,7 @@ void MTZ::compute(Graph *graph) { //undirected graph
 	IloObjective obj = IloAdd(model, IloMinimize(env, 0.0));
 
 	for (i = 0; i < graph->dimension; i++)
-		for (j = i; j < graph->dimension; j++)
+		for (j = 0; j < graph->dimension; j++)
 			obj.setLinearCoef(x[i][j], graph->distance(i+1,j+1));
 
 	///////////
@@ -446,26 +481,17 @@ catch (IloException& e) {
 
 	getCycles(graph, &solx, &bad_cycle, &good_cycle);
 
-	int weightTol = 0;
-	double coutTol = 0;
-
 	for (i=0;i<good_cycle.size();i++)
   	{
   		double weight = 0.0;
-  		double cose = 0.0;
   		vector<int> c = good_cycle.at(i);
   		for (j = 0; j < c.size(); j++) {
   			weight += (double)graph->demand[c.at(j)+1];
-  			if (j < c.size() - 1) cose += graph->distance(i+1,i+2);
-  			else cose += graph->distance(i+1,1);
 		}
-		weightTol += weight;
-		coutTol += cose;
-		cout << "Weight = " << weight << endl;
+
+		  	cout << "Weight = " << weight << endl;
 
   	}
-  	cout << "weightTol " << weightTol << endl;
-  	cout << "coutTol " << coutTol << endl;
 
 
 
