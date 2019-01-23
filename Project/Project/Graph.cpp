@@ -1,4 +1,5 @@
 #include "Graph.h"
+#include "defines.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -253,6 +254,40 @@ void Graph::saveSolution(std::vector<std::vector<int>> sol, string filename)
 {
 	ofstream myfile;
 	myfile.open(filename);
+
+	#ifdef COMPETENCE
+		myfile << "COMPETENCE\n";
+		myfile << "CLIENTSTYPE\n";
+		for (int i = 0; i < clientType.size(); i++) 
+		{
+			myfile << i << " " << clientType[i] << "\n";
+		}
+		myfile << "TRUCKSTYPE\n";
+		myfile << "AB";
+		for (int j = 0; j < vehicleType["AB"].size(); j++)
+		{
+			myfile << " " << vehicleType["AB"][j];
+		}
+		myfile << "\nA";
+		for (int j = 0; j < vehicleType["A"].size(); j++)
+		{
+			myfile << " " << vehicleType["A"][j];
+}
+		myfile << "\nB";
+		for (int j = 0; j < vehicleType["B"].size(); j++)
+		{
+			myfile << " " << vehicleType["B"][j];
+		}
+		myfile << "\nEMPTY";
+		for (int j = 0; j < vehicleType["empty"].size(); j++)
+		{
+			myfile << " " << vehicleType["empty"][j];
+		}
+		myfile << "\n";
+	#else
+		myfile << "BASIC\n";
+	#endif
+
 	myfile << "COORD\n";
 	for (int i = 1; i <= dimension; i++)
 	{
