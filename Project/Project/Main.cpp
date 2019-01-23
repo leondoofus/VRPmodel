@@ -3,6 +3,7 @@
 #include "BP.h"
 #include "SA.h"
 #include "CplexDirected.h"
+//#include "CplexDirectedCst.h"
 #include <iostream>     // std::cout
 
 int main(void)
@@ -36,7 +37,7 @@ int main(void)
 			cout << endl;
 		}
 	cout << "----------" << endl;
-	// CplexDirected cd;
-	// cd.compute(&G);
+	CplexDirected cd;
+	cd.compute(&G);
 	return 0;
 }

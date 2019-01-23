@@ -76,8 +76,14 @@ SA.o: Graph.o EvaluateTour.o BP.o SA.cpp SA.h defines.h
 CplexDirected.o: Graph.o CplexDirected.cpp defines.h
 	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) CplexDirected.cpp Graph.o -o CplexDirected.o
 
+CplexDirectedCst.o: Graph.o CplexDirectedCst.cpp defines.h
+	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) CplexDirectedCst.cpp Graph.o -o CplexDirectedCst.o
+
 Test: Graph.o TSP.o BP.o EvaluateTour.o SA.o CplexDirected.o Main.cpp
 	$(CCC) $(CCFLAGS) $(CCLNDIRS) Graph.o TSP.o BP.o EvaluateTour.o SA.o CplexDirected.o Main.cpp -o Test $(CCLNFLAGS)
+
+#Test: Graph.o TSP.o BP.o EvaluateTour.o SA.o CplexDirectedCst.o Main.cpp
+#	$(CCC) $(CCFLAGS) $(CCLNDIRS) Graph.o TSP.o BP.o EvaluateTour.o SA.o CplexDirectedCst.o Main.cpp -o Test $(CCLNFLAGS)
 
 clean:
 	rm -f *.o Test

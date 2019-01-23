@@ -1,20 +1,20 @@
 COMPETENCE
 CLIENTSTYPE
 1 empty
-2 B
-3 A
-4 B
+2 empty
+3 AB
+4 A
 5 empty
 6 B
-7 A
+7 AB
 8 AB
-9 B
-10 B
+9 A
+10 empty
 11 empty
-12 B
-13 B
-14 B
-15 empty
+12 empty
+13 A
+14 empty
+15 B
 16 A
 TRUCKSTYPE
 AB 0
@@ -39,13 +39,13 @@ COORD
 15 58 27
 16 37 69
 TRUCKS
-0 8 14 11 
-1 7 
-2 3 
-3 16 5 
-4 9 12 
-5 4 2 
-6 6 10 13 
-7 15 
+0 7 
+1 9 12 
+2 4 13 
+3 8 10 16 
+4 15 6 
+5 3 
+6 5 11 
+7 14 2 
 VALUE
-562.827
+560.066
