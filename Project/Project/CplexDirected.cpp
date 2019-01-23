@@ -217,29 +217,9 @@ void CplexDirected::compute(Graph *graph) { //undirected graph
 	//////  DATA
 	//////////////
 
-	/*if (argc != 2) {
-		cerr << "usage: " << argv[0] << " <GRA file name>   (without .gra)" << endl;
-		return 1;
-	}*/
-
 	name = graph->name;
-	nameext = name + ".gra";
-	nameextsol = name + ".acycl";
-
-
-	/*ifstream fic(nameext.c_str());
-
-	if (fic == NULL) {
-		cerr << "file " << nameext << " not found" << endl;
-		return 1;
-	}
-
-	C_Graph G;
-
-	G.read_directed_GRA(fic);
-
-	fic.close();*/
-
+	//nameext = name + ".gra";
+	//nameextsol = name + ".acycl";
 
 	//////////////
 	//////  CPLEX INITIALIZATION
@@ -268,17 +248,6 @@ void CplexDirected::compute(Graph *graph) { //undirected graph
 			x[i][j].setName(varname.str().c_str());
 		}
 	}
-
-
-	// vector<IloNumVar> w;
-	// w.resize(graph->dimension);
-	// for (i = 0; i < graph->dimension; i++) {
-	//  	w[i] = IloNumVar(env, 0.0, Q, ILOFLOAT);
-	// 	ostringstream varname;
-	//  	varname.str("");
-	// 	varname << "w_" << i << "_" << j;
-	//  	w[i].setName(varname.str().c_str());
-	// }
 
 	//////////////
 	//////  CST
@@ -335,22 +304,6 @@ void CplexDirected::compute(Graph *graph) { //undirected graph
 	}
 
 
-	// Constraints (5) MTZ
-	// for (i = 0; i < graph->dimension; i++) {
-	//  	for (j = 0; j < graph->dimension; j++) {
-	//  		if (j != i) {
-	//  			IloExpr c5(env);
-	//  			c5 += w[i] - w[j] - (Q + graph->demand[i+1]) * x[i][j];
-	//  			CC.add(c5 >= -Q);
-	//  			ostringstream nomcst;
-	//  			nomcst.str("");
-	// 			nomcst << "CstMTZ_" << i << "_" << j;
-	//  			CC[nbcst].setName(nomcst.str().c_str());
-	// 			nbcst++;
-	//  		}
-	// 	}
-	// }
-
 	// Trivial Constraints
 	// Diagonal = 0
 	for (i = 0; i < graph->dimension; i++) {
@@ -361,20 +314,6 @@ void CplexDirected::compute(Graph *graph) { //undirected graph
 		CC[nbcst].setName(nomcst.str().c_str());
 		nbcst++;
 	}
-
-	// Symmetry
-	// for (i = 0; i < graph->dimension; i++) {
-	// 	for (j = i+1; j < graph->dimension; j++) {
-	// 		IloExpr c7(env);
-	// 		c7 += x[i][j] - x[j][i];
-	// 		CC.add(c7 == 0);
-	// 		ostringstream nomcst;
-	// 		nomcst.str("");
-	// 		nomcst << "CstT2_" << i << "_" << j;
-	// 		CC[nbcst].setName(nomcst.str().c_str());
-	// 		nbcst++;
-	// 	}
-	// }
 
 	model.add(CC);
 
@@ -418,16 +357,16 @@ void CplexDirected::compute(Graph *graph) { //undirected graph
 
 	cplex.exportModel("sortie.lp");
 
-try{
-	if (!cplex.solve()) {
-		env.error() << "Failed to optimize LP" << endl;
-		exit(1);
+	try{
+		if (!cplex.solve()) {
+			env.error() << "Failed to optimize LP" << endl;
+			exit(1);
+		}
 	}
-}
-catch (IloException& e) {
-  cerr << e.getMessage();
-  e.end();
-}
+	catch (IloException& e) {
+	  	cerr << e.getMessage();
+	  	e.end();
+	}
 
 
 	env.out() << "Solution status = " << cplex.getStatus() << endl;
@@ -462,6 +401,17 @@ catch (IloException& e) {
 	//////////////
 	//////  OUTPUT
 	//////////////
+
+	for (int i = 0; i < good_cycle.size(); ++i)
+	{
+		for (int j = 0; j < good_cycle[i].size(); ++j)
+		{
+			good_cycle[i][j] += 1;
+		}
+		good_cycle[i].push_back(1);
+	}
+
+	graph->saveSolution(good_cycle,name + "sol.txt");
 
 
 	/*ofstream ficsol(nameextsol.c_str());

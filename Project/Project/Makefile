@@ -74,9 +74,9 @@ SA.o: Graph.o EvaluateTour.o BP.o SA.cpp SA.h defines.h
 	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) -c SA.cpp Graph.o EvaluateTour.o BP.o -o SA.o
 
 CplexDirected.o: Graph.o CplexDirected.cpp defines.h
-	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) CplexDirected.cpp Graph.o -o CplexDirect
+	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) CplexDirected.cpp Graph.o -o CplexDirected.o
 
-Test: TSP.o BP.o EvaluateTour.o SA.o  CplexDirected.o Main.cpp
+Test: Graph.o TSP.o BP.o EvaluateTour.o SA.o CplexDirected.o Main.cpp
 	$(CCC) $(CCFLAGS) $(CCLNDIRS) Graph.o TSP.o BP.o EvaluateTour.o SA.o CplexDirected.o Main.cpp -o Test $(CCLNFLAGS)
 
 clean:
