@@ -17,6 +17,7 @@ int main(void)
 		cout << "Born inf non satisfaite" << endl;
 	//cout << G.distance(1,5) << endl;
 
+	TSP tsp = TSP ();
 	vector<vector<int>> l = tsp.localSearch(G,5);
 
 	/*tsp.nearestNeighbor(G, l);*/
@@ -35,8 +36,8 @@ int main(void)
 			cout << endl;
 		}
 	cout << "----------" << endl;
-	// MTZ mtz;
-	// mtz.compute(&G);
+	MTZ mtz;
+	mtz.compute(&G);
 	// Csol csol;
 	// csol.compute(&G);
 	return 0;

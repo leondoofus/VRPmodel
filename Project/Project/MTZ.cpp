@@ -147,7 +147,7 @@ ILOLAZYCONSTRAINTCALLBACK2(LazyWeightCutSeparation,
 		}
 		int W = (int)ceil(weight/(double)Q);
 		IloRange ViolatedCst = IloRange(cviolated >= W);
-		//cout << ViolatedCst << endl;
+		cout << ViolatedCst << endl << endl;
 		add(ViolatedCst,IloCplex::UseCutPurge);
   	}
   }else{
@@ -155,8 +155,6 @@ ILOLAZYCONSTRAINTCALLBACK2(LazyWeightCutSeparation,
   	cout << "NO CYCLE OUTSIDE DETECTED" << endl;
   	#endif
   }
-	cout << "bad size " << bad_cycle.size() << endl;
-	cout << "good size " << good_cycle.size() << endl;
 
   #ifdef OUTPUT
   cout << "CHECKING " << good_cycle.size() << " GOOD CYCLE(S) ... " << endl;
@@ -180,7 +178,7 @@ ILOLAZYCONSTRAINTCALLBACK2(LazyWeightCutSeparation,
 		if (weight > (double)Q) {
 			int W = (int)ceil(weight/(double)Q);
 			IloRange ViolatedCst = IloRange(cviolated >= W);
-			//cout << ViolatedCst << endl;
+			cout << ViolatedCst << endl << endl;
 			add(ViolatedCst,IloCplex::UseCutPurge);
 			#ifdef OUTPUT
 		  	cout << "Weight = " << weight <<" ADDING 1 CONSTRAINT" << endl;
