@@ -1,4 +1,3 @@
-#include "defines.h"
 #include "SA.h"
 #include "BP.h"
 #include <algorithm>
@@ -198,18 +197,6 @@ std::vector<std::vector<int>> SA::clientChange(Graph graph, std::vector<std::vec
 		s2.insert(s2.begin() + j2, s1[j1]);
 		s1.erase(s1.begin() + j1);
 
-
-		// #ifdef COMPETENCE
-		// 	if (isValidTruckService(graph, s2, i2,s1[j1]))
-		// 	{
-		// 		neighborNotFound = false;
-		// 	}
-		// #else
-		// 	if (isValidTruck(graph, s2))
-		// 	{
-		// 		neighborNotFound = false;
-		// 	}
-		// #endif
 		if (isValidTruck(graph, s2))
 		{
 			neighborNotFound = false;
@@ -223,50 +210,6 @@ std::vector<std::vector<int>> SA::clientChange(Graph graph, std::vector<std::vec
 }
 
 bool SA::isValidTruck(Graph graph, std::vector<int> s)
-{
-	int sumD = 0;
-
-	for (int k = 0; k < s.size(); ++k)
-	{
-		sumD += graph.demand[s[k]];
-
-		if (sumD > graph.capacity)
-		{
-			return false;
-		}
-	}
-
-	return true;
-}
-
-bool SA::isValidTruckService(Graph graph, std::vector<int> s, int tour, int elem)
-{
-	string typeClient = graph.clientType[elem];
-
-	if (typeClient.compare("AB") == 0){
-		if (find(graph.vehicleType["AB"].begin(), graph.vehicleType["AB"].end(), tour) != graph.vehicleType["AB"].end())
-			return checkCapacity(graph, s);
-		else return false;
-	}
-	if (typeClient.compare("A") == 0){
-		if (find(graph.vehicleType["AB"].begin(), graph.vehicleType["AB"].end(), tour) != graph.vehicleType["AB"].end())
-				return checkCapacity(graph, s);
-		if (find(graph.vehicleType["A"].begin(), graph.vehicleType["A"].end(), tour) != graph.vehicleType["A"].end())
-				return checkCapacity(graph, s);
-		return false;
-	}
-	if (typeClient.compare("B") == 0){
-		if (find(graph.vehicleType["AB"].begin(), graph.vehicleType["AB"].end(), tour) != graph.vehicleType["AB"].end())
-			return checkCapacity(graph, s);
-		if (find(graph.vehicleType["B"].begin(), graph.vehicleType["B"].end(), tour) != graph.vehicleType["B"].end())
-			return checkCapacity(graph, s);
-		return false;
-	}
-	return checkCapacity(graph, s);
-}
-
-
-bool SA::checkCapacity(Graph graph, std::vector<int> s)
 {
 	int sumD = 0;
 

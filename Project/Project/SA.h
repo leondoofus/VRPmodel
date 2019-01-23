@@ -19,8 +19,6 @@ private:
 	std::vector<std::vector<int>> addTruck(Graph graph, std::vector<std::vector<int>> s, int m);
 	std::vector<std::vector<int>> eraseEmptyTruck(Graph graph, std::vector<std::vector<int>> s);
 	std::vector<std::vector<int>> clientChange(Graph graph, std::vector<std::vector<int>> s);
-	bool isValidTruckService(Graph graph, std::vector<int> s, int tour, int elem);
 	bool isValidTruck(Graph graph, std::vector<int> s);
 	double getEnergy(Graph graph, EvaluateTour e, std::vector<std::vector<int>> sn);
-	bool checkCapacity(Graph graph, std::vector<int> s);
 };

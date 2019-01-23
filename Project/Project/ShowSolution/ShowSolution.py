@@ -33,22 +33,69 @@ class Solution():
         self.filename = filename
         self.coord = dict()
         self.trucks = dict()
+        self.clientstype = dict()
+        self.truckstype = dict()
+        self.competence = False
         self.load_file()
-        self.show_file()
+        if(self.competence):
+            self.show_file_competence()
+        else:
+            self.show_file()
 
     def load_file(self):
         f = open(self.filename, 'r')
         read_coord = True
-        for l in f:
-            if(read_coord):
+        line = f.readline().split()
+        if(line[0] == "BASIC"):
+            line = f.readline().split()
+            if(line[0] == "COORD"):
+                for l in f:
+                    line = l.split()
+                    if(line[0] == "TRUCKS"):
+                        break
+                    self.coord[int(line[0])] = Point(int(line[1]), int(line[2]))
+            for l in f:
                 line = l.split()
+                self.trucks[int(line[0])] = list()
+                for i in range(1, len(line)):
+                    if(line[i] != "\n"):
+                        self.trucks[int(line[0])].append(int(line[i]))
+        if(line[0] == "COMPETENCE"):
+            self.competence = True
+            line = f.readline().split()
+            if(line[0] == "CLIENTSTYPE"):
+                for l in f:
+                    line = l.split()
+                    # print(line)
+                    if(line[0] == "TRUCKSTYPE"):
+                        break
+                    self.clientstype[int(line[0])] = line[1]
+            for l in f:
+                line = l.split()
+                if(line[0] == "AB"):
+                    for i in range(1, len(line)):
+                        if(line[i] != "\n"):
+                            self.truckstype[int(line[i])] = "AB"
+                if(line[0] == "A"):
+                    for i in range(1, len(line)):
+                        if(line[i] != "\n"):
+                            self.truckstype[int(line[i])] = "A"
+                if(line[0] == "B"):
+                    for i in range(1, len(line)):
+                        if(line[i] != "\n"):
+                            self.truckstype[int(line[i])] = "B"
+                if(line[0] == "EMPTY"):
+                    for i in range(1, len(line)):
+                        if(line[i] != "\n"):
+                            self.truckstype[int(line[i])] = "empty"
                 if(line[0] == "COORD"):
-                    continue
+                    break
+            for l in f:
+                line = l.split()
                 if(line[0] == "TRUCKS"):
-                    read_coord = False
-                    continue
+                    break
                 self.coord[int(line[0])] = Point(int(line[1]), int(line[2]))
-            else:
+            for l in f:
                 line = l.split()
                 self.trucks[int(line[0])] = list()
                 for i in range(1, len(line)):
@@ -79,7 +126,40 @@ class Solution():
         ax.set_ylim(bottom=None, top=100)
         plt.show()
 
+    def show_file_competence(self):
+        colors = {"AB" : 'blue', "A" : "green", "B": "red", "empty" : "orange"}
+        ls = {"AB" : 0, "A" : 0, "B": 0, "empty" : 0}
+        linestyle = ['solid', 'dashed', 'dashdot', 'dotted']
+        legend = list()
+        fig, ax = plt.subplots()
+        for truck in self.trucks.keys():
+            x = list()
+            y = list()
+            x.append(self.coord[1].x)
+            y.append(self.coord[1].y)
+            clients = self.trucks[truck]
+            for c in clients:
+                x.append(self.coord[c].x)
+                y.append(self.coord[c].y)
+            x.append(self.coord[1].x)
+            y.append(self.coord[1].y)
+            line = MyLine(x, y, mfc='red', ms=12)
+            line.set_color(colors[self.truckstype[truck]])
+            line.set_linestyle(linestyle[ls[self.truckstype[truck]]])
+            ls[self.truckstype[truck]] += 1
+            ax.add_line(line)
+        for client in self.coord.keys():
+            if(self.clientstype[client] in legend):
+                ax.plot(self.coord[client].x, self.coord[client].y, color=colors[self.clientstype[client]] ,marker='o')
+                continue
+            ax.plot(self.coord[client].x, self.coord[client].y, color=colors[self.clientstype[client]] ,marker='o', label=self.clientstype[client])
+            legend.append(self.clientstype[client])
+        ax.set_xlim(left=None, right=100)
+        ax.set_ylim(bottom=None, top=100)
+        ax.legend()
+        plt.show()
+
 def main():
-    s = Solution("./A-n32-k5.txt")
+    s = Solution("./exemple.txt")
 
 main()
