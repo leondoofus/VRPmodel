@@ -2,9 +2,7 @@
 #include "TSP.h"
 #include "BP.h"
 #include "SA.h"
-//#include "EvaluateTour.h"
-#include "MTZ.h"
-//#include "Csol.h"
+#include "CplexDirected.h"
 #include <iostream>     // std::cout
 
 int main(void)
@@ -36,9 +34,7 @@ int main(void)
 			cout << endl;
 		}
 	cout << "----------" << endl;
-	MTZ mtz;
-	mtz.compute(&G);
-	// Csol csol;
-	// csol.compute(&G);
+	CplexDirected cd;
+	cd.compute(&G);
 	return 0;
 }

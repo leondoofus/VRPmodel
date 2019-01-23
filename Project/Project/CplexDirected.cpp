@@ -1,4 +1,5 @@
-#include "Csol.h"
+#include "defines.h"
+#include "CplexDirected.h"
 #include <ilcplex/ilocplex.h>
 #include <sstream>
 #include <vector>
@@ -8,30 +9,25 @@
 #include <algorithm>
 
 
-#define epsilon 0.00001
+#define epsilon 0.001
 
 using namespace std;
-
-#define OUTPUT
 
 
 int getNeighbour (vector<int> solx, vector<int> cycle)
 {
+	// cout << "backkk " << cycle.back() << endl;
 	int index = distance(solx.begin(),find(solx.begin(), solx.end(), 1));
 	if (find(cycle.begin(), cycle.end(), index) != cycle.end())
 	{
-		index = distance(solx.begin(),find(solx.begin()+index+1, solx.end(), 1));
-		if (find(cycle.begin(), cycle.end(), index) != cycle.end())
-		{
-			return -1;
-		}
-		return index;
+		return -1;
 	}
 	return index;
 }
 
 vector<int> getCycleFromIndex (vector<vector<int>> solx, int index)
 {
+	// cout << "Getting Cycle From " << index << " : ";
 	vector<int> cycle;
 	cycle.push_back(index);
 	int neighbour = getNeighbour(solx.at(cycle.back()), cycle);
@@ -60,7 +56,7 @@ vector<int> getGoodCycleFromIndex (vector<vector<int>> solx, int index)
 		neighbour = getNeighbour(solx.at(cycle.back()), cycle);
 	}
 	#ifdef OUTPUT
-	cout << "Getting Cycle From " << index << " : ";
+	//cout << "Getting Cycle From " << index << " : ";
 	for (int i=0; i<cycle.size(); i++) cout << cycle.at(i) << " ";
 	cout << endl;
 	#endif
@@ -109,23 +105,33 @@ ILOLAZYCONSTRAINTCALLBACK2(LazyWeightCutSeparation,
 	int i,j;
 	int Q = G.capacity;
 	vector<vector<int>> solx;
+
 	solx.resize(G.dimension);
 	for (i=0;i<G.dimension;i++)
 		solx[i].resize(G.dimension);
-	for (i = 0; i < G.dimension; i++)
-		for (j = 0; j < G.dimension; j++)
-			solx[i][j] = getValue(x[i][j]);
 
-	for (i = 0; i < G.dimension; i++){
-		if (i<10) cout << i << " ";
-		else cout << i;}
-	cout <<endl;
-	for (i = 0; i < G.dimension; i++){
+	for (i = 0; i < G.dimension; i++)
 		for (j = 0; j < G.dimension; j++){
-			cout << solx[i][j] << " ";
+			if (getValue(x[i][j]) < epsilon)
+				solx[i][j] = 0;
+			else 
+				solx[i][j] = 1;
 		}
-		cout << endl;
-	}
+
+	#ifdef OUTPUT
+		for (i = 0; i < G.dimension; i++){
+			if (i<10) cout << i << " ";
+			else cout << i;
+		}
+		cout <<endl;
+		for (i = 0; i < G.dimension; i++){
+			for (j = 0; j < G.dimension; j++){
+				cout << solx[i][j] << " ";
+			}
+			cout << endl;
+		}
+  	#endif
+	
 
   vector<vector<int>> bad_cycle;
   vector<vector<int>> good_cycle;
@@ -143,15 +149,14 @@ ILOLAZYCONSTRAINTCALLBACK2(LazyWeightCutSeparation,
   		for (j = 0; j < c.size(); j++) {
   			weight += (double)G.demand[c.at(j)+1];
 			for (int k = 0; k < G.dimension; k++) {
-				if (find(c.begin(), c.end(), k) == c.end()){
+				if (find(c.begin(), c.end(), k) == c.end())
 					cviolated += x[c.at(j)][k];
-				}
 			}
 		}
-		int W = 2 * (int)ceil(weight/(double)Q);
+		int W = (int)ceil(weight/(double)Q);
 		IloRange ViolatedCst = IloRange(cviolated >= W);
-		//cout << ViolatedCst << endl;
-		add(ViolatedCst,IloCplex::UseCutForce);
+		// cout << ViolatedCst << endl << endl;
+		add(ViolatedCst,IloCplex::UseCutPurge);
   	}
   }else{
   	#ifdef OUTPUT
@@ -165,62 +170,29 @@ ILOLAZYCONSTRAINTCALLBACK2(LazyWeightCutSeparation,
 
   for (i=0;i<good_cycle.size();i++)
   	{
-  		int intTol = 0;
   		double weight = 0.0;
   		vector<int> c = good_cycle.at(i);
   		IloExpr cviolated(getEnv());
-  		for (j = 0; j < c.size(); j++) {
+  		for (j = 1; j < c.size(); j++) {
   			weight += (double)G.demand[c.at(j)+1];
 			for (int k = 0; k < G.dimension; k++) {
-				if (find(c.begin(), c.end(), k) == c.end()){
-					cviolated += x[c.at(j)][k];
-					intTol += getValue(x[c.at(j)][k]);
+				if (k == 0) cviolated += x[c.at(j)][k];
+				else {
+					if (find(c.begin(), c.end(), k) == c.end())
+						cviolated += x[c.at(j)][k];
 				}
 			}
 		}
 		if (weight > (double)Q) {
-			int W = 2 * (int)ceil(weight/(double)Q);
+			int W = (int)ceil(weight/(double)Q);
 			IloRange ViolatedCst = IloRange(cviolated >= W);
-			// cout << ViolatedCst << endl;
-			add(ViolatedCst,IloCplex::UseCutForce);
+			// cout << ViolatedCst << endl << endl;
+			add(ViolatedCst,IloCplex::UseCutPurge);
 			#ifdef OUTPUT
 		  	cout << "Weight = " << weight <<" ADDING 1 CONSTRAINT" << endl;
-		  	cout << "intTol " << intTol << endl;
 		  	#endif
 		}
   	}
-
-  // 	for (i=0;i<good_cycle.size();i++)
-  // 	{
-  // 		cout << "Begin" << endl;
-  // 		int intTol = 0;
-  // 		double weight = 0.0;
-  // 		vector<int> c = good_cycle.at(i);
-  // 		IloExpr cviolated(getEnv());
-  // 		for (j = 0; j < c.size(); j++) {
-  // 			weight += (double)G.demand[c.at(j)+1];
-		// 	for (int k = 1; k < G.dimension; k++) {
-		// 		if (find(c.begin(), c.end(), k) == c.end()){
-		// 			cviolated += x[c.at(j)][k];
-		// 			intTol += getValue(x[c.at(j)][k]);
-		// 			if (getValue(x[c.at(j)][k]) == 1) cout << "ici j k " << c.at(j) << " " << k << endl;
-		// 		}
-		// 	}
-		// 	cviolated += x[c.at(j)][0];
-		// 	intTol += getValue(x[c.at(j)][0]);
-		// 	if (getValue(x[c.at(j)][0]) == 1) cout << "ici j k " << c.at(j) << " 0" << endl;
-		// }
-		// if (weight > (double)Q) {
-		// 	int W = 2 * (int)ceil(weight/(double)Q);
-		// 	IloRange ViolatedCst = IloRange(cviolated >= W);
-		// 	cout << ViolatedCst << endl;
-		// 	add(ViolatedCst,IloCplex::UseCutForce);
-		// 	#ifdef OUTPUT
-		//   	cout << "Weight = " << weight <<" ADDING 1 CONSTRAINT" << endl;
-		//   	cout << "intTol " << intTol << endl;
-		//   	#endif
-		// }
-  // 	}
 
 }
 
@@ -231,7 +203,7 @@ ILOLAZYCONSTRAINTCALLBACK2(LazyWeightCutSeparation,
 
 
 
-void Csol::compute(Graph *graph) { //undirected graph
+void CplexDirected::compute(Graph *graph) { //undirected graph
 	string name, nameext, nameextsol;
 	int i, j, k;
 
@@ -289,7 +261,7 @@ void Csol::compute(Graph *graph) { //undirected graph
 
 	for (i = 0; i < graph->dimension; i++) {
 		for (j = 0; j < graph->dimension; j++) {
-			x[i][j] = IloNumVar(env, 0.0, 1.0, ILOBOOL);
+			x[i][j] = IloNumVar(env, 0.0, 1.0, ILOINT);
 			ostringstream varname;
 			varname.str("");
 			varname << "x_" << i << "_" << j;
@@ -319,32 +291,32 @@ void Csol::compute(Graph *graph) { //undirected graph
 	// Constraint (1)
 	
 	IloExpr c1(env);
-	//IloExpr c2(env);
+	IloExpr c2(env);
 	for (i = 0; i < graph->dimension; i++) {
 		if (i != depot) {
 			c1 += x[depot][i];
-			//c2 += x[i][depot];
+			c2 += x[i][depot];
 		}
 	}
-	CC.add(c1 <= 2 * graph->vehicles);
+	CC.add(c1 <= graph->vehicles);
 	CC[nbcst].setName("VehiclesOUT");
 	nbcst++;
-	// CC.add(c2 <= graph->vehicles);
-	// CC[nbcst].setName("VehiclesIN");
-	// nbcst++;
+	CC.add(c2 <= graph->vehicles);
+	CC[nbcst].setName("VehiclesIN");
+	nbcst++;
 
 	// Constraints (3)
 	for (i = 0; i < graph->dimension; i++) {
 		if (i == depot) continue;
 		IloExpr c3(env);
-		//IloExpr c4(env);
+		IloExpr c4(env);
 		for (j = 0; j < graph->dimension; j++) {
 			if (j != i) {
 				c3 += x[i][j];
-				//c4 += x[j][i];
+				c4 += x[j][i];
 			}
 		}
-		CC.add(c3 == 2);
+		CC.add(c3 == 1);
 
 		ostringstream nomcst;
 		nomcst.str("");
@@ -353,13 +325,13 @@ void Csol::compute(Graph *graph) { //undirected graph
 		CC[nbcst].setName(nomcst.str().c_str());
 		nbcst++;
 
-		// CC.add(c4 == 1);
+		CC.add(c4 == 1);
 
-		// nomcst.str("");
-		// nomcst << "CstRetailerIN_" << i;
+		nomcst.str("");
+		nomcst << "CstRetailerIN_" << i;
 
-		// CC[nbcst].setName(nomcst.str().c_str());
-		// nbcst++;
+		CC[nbcst].setName(nomcst.str().c_str());
+		nbcst++;
 	}
 
 
@@ -391,19 +363,18 @@ void Csol::compute(Graph *graph) { //undirected graph
 	}
 
 	// Symmetry
-	for (i = 0; i < graph->dimension; i++) {
-		for (j = i+1; j < graph->dimension; j++) {
-			IloExpr c7(env);
-			c7 += x[i][j] - x[j][i];
-			CC.add(c7 == 0);
-			ostringstream nomcst;
-			nomcst.str("");
-			nomcst << "CstT2_" << i << "_" << j;
-			CC[nbcst].setName(nomcst.str().c_str());
-			nbcst++;
-		}
-	}
-
+	// for (i = 0; i < graph->dimension; i++) {
+	// 	for (j = i+1; j < graph->dimension; j++) {
+	// 		IloExpr c7(env);
+	// 		c7 += x[i][j] - x[j][i];
+	// 		CC.add(c7 == 0);
+	// 		ostringstream nomcst;
+	// 		nomcst.str("");
+	// 		nomcst << "CstT2_" << i << "_" << j;
+	// 		CC[nbcst].setName(nomcst.str().c_str());
+	// 		nbcst++;
+	// 	}
+	// }
 
 	model.add(CC);
 
@@ -425,7 +396,7 @@ void Csol::compute(Graph *graph) { //undirected graph
 	IloCplex cplex(model);
 
 	/// ADD SEPARATION CALLBACK
-	cplex.use(LazyWeightCutSeparation(env,*graph,x));
+	 cplex.use(LazyWeightCutSeparation(env,*graph,x));
 
 	// cplex.setParam(IloCplex::Cliques,-1);
 	// cplex.setParam(IloCplex::Covers,-1);
@@ -471,8 +442,6 @@ catch (IloException& e) {
 	for (i = 0; i < graph->dimension; i++) {
 		for (j = 0; j < graph->dimension; j++) {
 			solx[i][j] = cplex.getValue(x[i][j]);
-			// if (solx[i][j])
-			// 	cout << x[i][j].getName() << " " << solx[i][j] << endl;
 		}
 	}
 
@@ -481,17 +450,6 @@ catch (IloException& e) {
 
 	getCycles(graph, &solx, &bad_cycle, &good_cycle);
 
-	for (i=0;i<good_cycle.size();i++)
-  	{
-  		double weight = 0.0;
-  		vector<int> c = good_cycle.at(i);
-  		for (j = 0; j < c.size(); j++) {
-  			weight += (double)graph->demand[c.at(j)+1];
-		}
-
-		  	cout << "Weight = " << weight << endl;
-
-  	}
 
 
 

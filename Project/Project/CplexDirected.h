@@ -1,6 +1,6 @@
 #include "Graph.h"
 
-class MTZ
+class CplexDirected
 {
 public:
 	void compute(Graph *G);

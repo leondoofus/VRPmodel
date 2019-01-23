@@ -73,17 +73,11 @@ EvaluateTour.o: Graph.o EvaluateTour.h EvaluateTour.cpp defines.h
 SA.o: Graph.o EvaluateTour.o BP.o SA.cpp SA.h defines.h
 	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) -c SA.cpp Graph.o EvaluateTour.o BP.o -o SA.o
 
-MTZ.o: Graph.o MTZ.cpp
-	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) MTZ.cpp Graph.o -o MTZ.o
+CplexDirected.o: Graph.o CplexDirected.cpp defines.h
+	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) CplexDirected.cpp Graph.o -o CplexDirect
 
-Csol.o: Graph.o Csol.cpp
-	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) Csol.cpp Graph.o -o Csol.o
-
-Test: TSP.o BP.o EvaluateTour.o SA.o MTZ.o Main.cpp
-	$(CCC) $(CCFLAGS) $(CCLNDIRS) Graph.o TSP.o BP.o EvaluateTour.o SA.o MTZ.o Main.cpp -o Test $(CCLNFLAGS)
-
-#Test: TSP.o BP.o EvaluateTour.o SA.o Csol.o Main.cpp
-#	$(CCC) $(CCFLAGS) $(CCLNDIRS) Graph.o TSP.o BP.o EvaluateTour.o SA.o Csol.o Main.cpp -o Test $(CCLNFLAGS)
+Test: TSP.o BP.o EvaluateTour.o SA.o  CplexDirected.o Main.cpp
+	$(CCC) $(CCFLAGS) $(CCLNDIRS) Graph.o TSP.o BP.o EvaluateTour.o SA.o CplexDirected.o Main.cpp -o Test $(CCLNFLAGS)
 
 clean:
 	rm -f *.o Test
