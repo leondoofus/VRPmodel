@@ -250,7 +250,7 @@ bool Graph::computeRelaxedCapacity()
 	return sum <= capacity * vehicles;
 }
 
-void Graph::saveSolution(std::vector<std::vector<int>> sol, string filename)
+void Graph::saveSolution(std::vector<std::vector<int>> sol, string filename, float score)
 {
 	ofstream myfile;
 	myfile.open(filename);
@@ -258,7 +258,7 @@ void Graph::saveSolution(std::vector<std::vector<int>> sol, string filename)
 	#ifdef COMPETENCE
 		myfile << "COMPETENCE\n";
 		myfile << "CLIENTSTYPE\n";
-		for (int i = 0; i < clientType.size(); i++) 
+		for (int i = 1; i <= clientType.size(); i++) 
 		{
 			myfile << i << " " << clientType[i] << "\n";
 		}
@@ -305,6 +305,7 @@ void Graph::saveSolution(std::vector<std::vector<int>> sol, string filename)
 		myfile << "\n";
 	}
 
+    myfile << "VALUE" << "\n" << score << "\n";
 	myfile.close();
 }
 

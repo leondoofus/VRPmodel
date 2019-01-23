@@ -31,6 +31,7 @@ class Point():
 class Solution():
     def __init__(self, filename):
         self.filename = filename
+        self.value = 0
         self.coord = dict()
         self.trucks = dict()
         self.clientstype = dict()
@@ -56,10 +57,16 @@ class Solution():
                     self.coord[int(line[0])] = Point(int(line[1]), int(line[2]))
             for l in f:
                 line = l.split()
+                if(line[0] == "VALUE"):
+                    break
                 self.trucks[int(line[0])] = list()
                 for i in range(1, len(line)):
                     if(line[i] != "\n"):
                         self.trucks[int(line[0])].append(int(line[i]))
+            line = f.readline().split()
+            self.value = int(line[0])
+            f.close()
+            return
         if(line[0] == "COMPETENCE"):
             self.competence = True
             line = f.readline().split()
@@ -97,10 +104,16 @@ class Solution():
                 self.coord[int(line[0])] = Point(int(line[1]), int(line[2]))
             for l in f:
                 line = l.split()
+                if(line[0] == "VALUE"):
+                    break
                 self.trucks[int(line[0])] = list()
                 for i in range(1, len(line)):
                     if(line[i] != "\n"):
                         self.trucks[int(line[0])].append(int(line[i]))
+            line = f.readline().split()
+            self.value = float(line[0])
+            f.close()
+            return
 
     def show_file(self):
         colors = ['blue', 'green', 'orange', 'red', 'purple', 'black', 'yellow', 'cyan', 'magenta', 'grey']
@@ -124,6 +137,7 @@ class Solution():
             color = (color + 1) % 10
         ax.set_xlim(left=None, right=100)
         ax.set_ylim(bottom=None, top=100)
+        plt.title("Value : "+str(self.value))
         plt.show()
 
     def show_file_competence(self):
@@ -148,7 +162,10 @@ class Solution():
             line.set_linestyle(linestyle[ls[self.truckstype[truck]]])
             ls[self.truckstype[truck]] += 1
             ax.add_line(line)
+        print(self.coord.keys())
+        print(self.clientstype)
         for client in self.coord.keys():
+            # print(self.clientstype[client])
             if(self.clientstype[client] in legend):
                 ax.plot(self.coord[client].x, self.coord[client].y, color=colors[self.clientstype[client]] ,marker='o')
                 continue
@@ -157,9 +174,10 @@ class Solution():
         ax.set_xlim(left=None, right=100)
         ax.set_ylim(bottom=None, top=100)
         ax.legend()
+        plt.title("Value : "+str(self.value))
         plt.show()
 
 def main():
-    s = Solution("./exemple.txt")
+    s = Solution("../test.txt")
 
 main()

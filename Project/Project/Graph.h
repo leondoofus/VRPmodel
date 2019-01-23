@@ -33,7 +33,7 @@ public:
 	void printGraph(void);
 	float distance(int n1, int n2);
 	bool computeRelaxedCapacity();
-	void saveSolution(std::vector<std::vector<int>> sol, string filename);
+	void saveSolution(std::vector<std::vector<int>> sol, string filename, float score);
 	float getReward(int tour, int client);
 private:
 	void initClientType();

@@ -20,12 +20,14 @@ int main(void)
 
 	/*tsp.nearestNeighbor(G, l);*/
 	EvaluateTour e = EvaluateTour();
-	cout << "Tour value : " << e.evaluate(G, l) << endl;
-	G.saveSolution(l, "test");
+	float value = e.evaluate(G, l);
+	cout << "Tour value : " << value << endl;
 
 	SA sa = SA();
 	l = sa.simulatedAnnealing(G, e, l, 2000, 1000.0, 0.99, 100.0);
-	cout << e.evaluate(G, l) << endl;
+	value = e.evaluate(G, l);
+	cout << value << endl;
+	G.saveSolution(l, "test.txt", value);
 	for (int it = 0; it != l.size(); ++it)
 		{
 			cout << "----------" << endl;
@@ -34,7 +36,7 @@ int main(void)
 			cout << endl;
 		}
 	cout << "----------" << endl;
-	CplexDirected cd;
-	cd.compute(&G);
+	// CplexDirected cd;
+	// cd.compute(&G);
 	return 0;
 }

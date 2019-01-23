@@ -372,6 +372,8 @@ void CplexDirected::compute(Graph *graph) { //undirected graph
 	env.out() << "Solution status = " << cplex.getStatus() << endl;
 	env.out() << "Solution value  = " << cplex.getObjValue() << endl;
 
+	float val = (float)cplex.getObjValue();
+
 
 	vector<vector<int>>   solx;
 	solx.resize(graph->dimension);
@@ -411,7 +413,7 @@ void CplexDirected::compute(Graph *graph) { //undirected graph
 		good_cycle[i].push_back(1);
 	}
 
-	graph->saveSolution(good_cycle,name + "sol.txt");
+	graph->saveSolution(good_cycle,name + "sol.txt", val);
 
 
 	/*ofstream ficsol(nameextsol.c_str());
