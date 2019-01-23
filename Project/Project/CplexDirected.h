@@ -3,6 +3,6 @@
 class CplexDirected
 {
 public:
-	void compute(Graph *G);
+	float compute(Graph *graph, vector<vector<int>>* solution);
 };
 

@@ -203,7 +203,7 @@ ILOLAZYCONSTRAINTCALLBACK2(LazyWeightCutSeparation,
 
 
 
-void CplexDirected::compute(Graph *graph) { //undirected graph
+float CplexDirected::compute(Graph *graph, vector<vector<int>>* solution) { //undirected graph
 	string name, nameext, nameextsol;
 	int i, j, k;
 
@@ -413,9 +413,9 @@ void CplexDirected::compute(Graph *graph) { //undirected graph
 		good_cycle[i].push_back(1);
 	}
 
-	graph->saveSolution(good_cycle,name + "sol.txt", val);
-
-
+	//graph->saveSolution(good_cycle,name + "sol.txt", val);
+	solution = &good_cycle;
+	return val;
 	/*ofstream ficsol(nameextsol.c_str());
 
 	for (i = 0; i < G.nb_nodes; i++)
