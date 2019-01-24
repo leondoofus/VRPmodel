@@ -139,7 +139,8 @@ class Solution():
         ax.set_xlim(left=None, right=100)
         ax.set_ylim(bottom=None, top=100)
         plt.title("Value : "+str(self.value))
-        plt.show()
+        plt.savefig("tmp.png")
+        #plt.show()
 
     def show_file_competence(self):
         colors = {"AB" : 'blue', "A" : "green", "B": "red", "empty" : "orange"}
@@ -176,7 +177,8 @@ class Solution():
         ax.set_ylim(bottom=None, top=100)
         ax.legend()
         plt.title("Value : "+str(self.value))
-        plt.show()
+        plt.savefig("tmp.png")
+        #plt.show()
 
 def main(file):
     s = Solution(file)
