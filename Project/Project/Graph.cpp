@@ -135,8 +135,10 @@ Graph::Graph(string filename)
 			maxTime += distance(depot, i);
 		}
 		maxTime *= 1.5 / vehicles;
-		initClientType();
-		initVehicleType();
+		#ifdef COMPETENCE
+			initClientType();
+			initVehicleType();
+		#endif
 	}
 	else
 	{

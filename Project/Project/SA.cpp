@@ -60,7 +60,8 @@ std::vector<std::vector<int>> SA::simulatedAnnealing(Graph graph, EvaluateTour e
 
 double SA::getEnergy(Graph graph, EvaluateTour e, std::vector<std::vector<int>> sn)
 {
-	return e.evaluate(graph, sn) + 100 * std::max((int)(sn.size() - graph.vehicles), 0);
+	return e.evaluate(graph, sn);
+	//return e.evaluate(graph, sn) + 100 * std::max((int)(sn.size() - graph.vehicles), 0);
 }
 
 

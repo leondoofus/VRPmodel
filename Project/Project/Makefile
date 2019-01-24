@@ -56,7 +56,7 @@ CCFLAGS = $(CCOPT) -I$(CPLEXINCDIR) -I$(CONCERTINCDIR)
 
 
 
-all: Test
+all: Main
 
 Graph.o: Graph.cpp Graph.h
 	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) -c Graph.cpp -o Graph.o
@@ -79,16 +79,11 @@ CplexDirected.o: Graph.o CplexDirected.cpp defines.h
 CplexDirectedCst.o: Graph.o CplexDirectedCst.cpp defines.h
 	$(CCC) -c -w $(CCFLAGS) $(CCLNDIRS) CplexDirectedCst.cpp Graph.o -o CplexDirectedCst.o
 
-Test: Graph.o TSP.o BP.o EvaluateTour.o SA.o CplexDirected.o Main.cpp
-	$(CCC) $(CCFLAGS) $(CCLNDIRS) Graph.o TSP.o BP.o EvaluateTour.o SA.o CplexDirected.o Main.cpp -o Test $(CCLNFLAGS)
+Main: Graph.o TSP.o BP.o EvaluateTour.o SA.o CplexDirected.o Main.cpp defines.h
+	$(CCC) $(CCFLAGS) $(CCLNDIRS) Graph.o TSP.o BP.o EvaluateTour.o SA.o CplexDirected.o Main.cpp -o Main $(CCLNFLAGS)
 
-#Test: Graph.o TSP.o BP.o EvaluateTour.o SA.o CplexDirectedCst.o Main.cpp
-#	$(CCC) $(CCFLAGS) $(CCLNDIRS) Graph.o TSP.o BP.o EvaluateTour.o SA.o CplexDirectedCst.o Main.cpp -o Test $(CCLNFLAGS)
+#Main: Graph.o TSP.o BP.o EvaluateTour.o SA.o CplexDirectedCst.o Main.cpp defines.h
+#	$(CCC) $(CCFLAGS) $(CCLNDIRS) Graph.o TSP.o BP.o EvaluateTour.o SA.o CplexDirectedCst.o Main.cpp -o Main $(CCLNFLAGS)
 
 clean:
-	rm -f *.o Test
-
-#all:
-#	g++ -std=c++11 -w *.cpp -o Test
-#clean:
-#	rm -f *.o Test
+	rm -f *.o Main

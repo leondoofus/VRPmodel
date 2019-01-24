@@ -72,13 +72,13 @@ vector<vector<int>> TSP::nearestNeighbor(Graph graph, vector<vector<int>> nodes)
 		tours.push_back(nearest_neighbor(graph, nodes[i]));
 	}
 
-	for (int it = 0; it != tours.size(); ++it)
-	{
-		cout << "----------" << endl;
-		for (int it2 = 0; it2 != tours[it].size(); ++it2)
-			cout << tours[it][it2] << " ";
-		cout << endl;
-	}
+	// for (int it = 0; it != tours.size(); ++it)
+	// {
+	// 	cout << "----------" << endl;
+	// 	for (int it2 = 0; it2 != tours[it].size(); ++it2)
+	// 		cout << tours[it][it2] << " ";
+	// 	cout << endl;
+	// }
 	return tours;
 }
 
@@ -222,24 +222,7 @@ vector<vector<int>> TSP::localSearch (Graph graph, int tabuSize)
 	vector<vector<int>> bestSol = nearestInsertion(graph, bp.firstFitDecreasing(graph));
 	float bestScore = eval.evaluate(graph, bestSol);
 
-	for (int i=0; i<bestSol.size();i++){
-		for(int j=0;j<bestSol.at(i).size();j++){
-			cout << bestSol.at(i).at(j) << " ";
-		}
-		cout << endl;
-	}
-
-	cout << "Before " << bestScore << endl;
-
 	vector<vector<int>> newSol = bestNeighbourSearch(graph,bestSol,tabuSize);
-
-	for (int i=0; i<newSol.size();i++){
-		for(int j=0;j<newSol.at(i).size();j++){
-			cout << newSol.at(i).at(j) << " ";
-		}
-		cout << endl;
-	}
-	cout << "After " << eval.evaluate(graph, newSol) << endl;
 
 	return bestSol;
 }

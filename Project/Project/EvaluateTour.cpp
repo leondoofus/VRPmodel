@@ -1,6 +1,7 @@
 #include "defines.h"
 #include "EvaluateTour.h"
 
+using namespace std;
 
 EvaluateTour::EvaluateTour()
 {
@@ -34,6 +35,7 @@ float EvaluateTour::evaluate(Graph graph, vector<vector<int>> tours)
 			}
 		}
 	#endif
+	val += 100 * std::max((int)(tours.size() - graph.vehicles), 0);
 	//cout << "Tours value : " << val << endl;
 	return val;
 }

@@ -1,3 +1,3 @@
 //#define WORKINGTIME
-//#define COMPETENCE
+#define COMPETENCE
 //#define OUTPUT

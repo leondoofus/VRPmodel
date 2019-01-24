@@ -14,16 +14,15 @@
 using namespace std;
 
 
-// int getNeighbour (vector<int> solx, vector<int> cycle)
-// {
-// 	// cout << "backkk " << cycle.back() << endl;
-// 	int index = distance(solx.begin(),find(solx.begin(), solx.end(), 1));
-// 	if (find(cycle.begin(), cycle.end(), index) != cycle.end())
-// 	{
-// 		return -1;
-// 	}
-// 	return index;
-// }
+int getNeighbour (vector<int> solx, vector<int> cycle)
+{
+	int index = distance(solx.begin(),find(solx.begin(), solx.end(), 1));
+	if (find(cycle.begin(), cycle.end(), index) != cycle.end())
+	{
+		return -1;
+	}
+	return index;
+}
 
 // vector<int> getCycleFromIndex (vector<vector<int>> solx, int index)
 // {
@@ -63,36 +62,36 @@ using namespace std;
 // 	return cycle;
 // }
 
-// bool getCycles (Graph* G, vector<vector<int>>* solx, vector<vector<int>>* bad_cycle, vector<vector<int>>* good_cycle)
-// {
-// 	bool detect = false;
-// 	int i,j;
+bool getCycles (Graph* G, vector<vector<vector<int>>>* solx, vector<vector<int>>* bad_cycle, vector<vector<int>>* good_cycle)
+{
+	bool detect = false;
+	int i,j;
 
-// 	vector<int> checked;
+	vector<int> checked;
 
-// 	for (i=1;i<G->dimension;i++){
-// 		if (solx->at(0).at(i) == 1)
-// 		{
-// 			if(find(checked.begin(), checked.end(), i) == checked.end()) // i not checked
-// 			{
-// 				vector<int> c = getGoodCycleFromIndex(*solx, i);
-// 				good_cycle->push_back(c);
-// 				checked.insert(checked.end(),c.begin()+1,c.end());
-// 			}
-// 		}
-// 	}
-// 	for (i=1;i<G->dimension;i++)
-// 	{
-// 		if(find(checked.begin(), checked.end(), i) == checked.end()) // i not checked
-// 		{
-// 			vector<int> c = getCycleFromIndex(*solx, i);
-// 			bad_cycle->push_back(c);
-// 			detect = true;
-// 			checked.insert(checked.end(),c.begin(),c.end());
-// 		}
-// 	}
-// 	return detect;
-// }
+	for (i=1;i<G->dimension;i++){
+		if (solx->at(0).at(i) == 1)
+		{
+			if(find(checked.begin(), checked.end(), i) == checked.end()) // i not checked
+			{
+				vector<int> c = getGoodCycleFromIndex(*solx, i);
+				good_cycle->push_back(c);
+				checked.insert(checked.end(),c.begin()+1,c.end());
+			}
+		}
+	}
+	for (i=1;i<G->dimension;i++)
+	{
+		if(find(checked.begin(), checked.end(), i) == checked.end()) // i not checked
+		{
+			vector<int> c = getCycleFromIndex(*solx, i);
+			bad_cycle->push_back(c);
+			detect = true;
+			checked.insert(checked.end(),c.begin(),c.end());
+		}
+	}
+	return detect;
+}
 
 ILOLAZYCONSTRAINTCALLBACK2(LazyWeightCutSeparationCst,
 			   Graph &, G,			 

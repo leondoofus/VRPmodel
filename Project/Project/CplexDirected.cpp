@@ -16,7 +16,6 @@ using namespace std;
 
 int getNeighbour (vector<int> solx, vector<int> cycle)
 {
-	// cout << "backkk " << cycle.back() << endl;
 	int index = distance(solx.begin(),find(solx.begin(), solx.end(), 1));
 	if (find(cycle.begin(), cycle.end(), index) != cycle.end())
 	{
@@ -27,7 +26,6 @@ int getNeighbour (vector<int> solx, vector<int> cycle)
 
 vector<int> getCycleFromIndex (vector<vector<int>> solx, int index)
 {
-	// cout << "Getting Cycle From " << index << " : ";
 	vector<int> cycle;
 	cycle.push_back(index);
 	int neighbour = getNeighbour(solx.at(cycle.back()), cycle);
@@ -56,7 +54,7 @@ vector<int> getGoodCycleFromIndex (vector<vector<int>> solx, int index)
 		neighbour = getNeighbour(solx.at(cycle.back()), cycle);
 	}
 	#ifdef OUTPUT
-	//cout << "Getting Cycle From " << index << " : ";
+	cout << "Getting Cycle From " << index << " : ";
 	for (int i=0; i<cycle.size(); i++) cout << cycle.at(i) << " ";
 	cout << endl;
 	#endif
@@ -337,6 +335,8 @@ float CplexDirected::compute(Graph *graph, vector<vector<int>>* solution) { //un
 	/// ADD SEPARATION CALLBACK
 	 cplex.use(LazyWeightCutSeparation(env,*graph,x));
 
+	cplex.setParam(IloCplex::TiLim, 300);
+
 	// cplex.setParam(IloCplex::Cliques,-1);
 	// cplex.setParam(IloCplex::Covers,-1);
 	// cplex.setParam(IloCplex::DisjCuts,-1);
@@ -360,7 +360,8 @@ float CplexDirected::compute(Graph *graph, vector<vector<int>>* solution) { //un
 	try{
 		if (!cplex.solve()) {
 			env.error() << "Failed to optimize LP" << endl;
-			exit(1);
+			//exit(1);
+			return 0;
 		}
 	}
 	catch (IloException& e) {
@@ -414,7 +415,7 @@ float CplexDirected::compute(Graph *graph, vector<vector<int>>* solution) { //un
 	}
 
 	//graph->saveSolution(good_cycle,name + "sol.txt", val);
-	solution = &good_cycle;
+	*solution = good_cycle;
 	return val;
 	/*ofstream ficsol(nameextsol.c_str());
 

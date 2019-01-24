@@ -92,7 +92,6 @@ std::vector<std::vector<int>> BP::firstFitDecreasing(Graph graph)
 std::vector<std::vector<int>> BP::firstFitDecreasingService(Graph graph)
 {
 		std::vector<int> decreasingOrder = getDecreasingOrder(graph.demand, graph.dimension);
-		cout << decreasingOrder.size() << endl;
 		std::vector<std::vector<int>> allocation;
 		std::vector<int> weights;
 
@@ -131,10 +130,6 @@ std::vector<std::vector<int>> BP::firstFitDecreasingService(Graph graph)
 			}
 		}
 
-		cout << vab.size() << endl;
-		cout << va.size() << endl;
-		cout << vb.size() << endl;
-		cout << ve.size() << endl;
 
 		for (int i = 0; i<graph.vehicles; i++){
 			vector<int> tmp;
