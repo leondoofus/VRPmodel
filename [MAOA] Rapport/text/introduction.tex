@@ -1,0 +1,10 @@
+\section{Introduction}
+\label{S introduction}
+
+Dans le cadre de l'UE MAOA du master Androide, nous avons effectué un projet. Ce projet est proposé par M. Fouilhoux. Il consiste en la résolution d'un problème de tournées de techniciens de manière approchée et de manière exacte. Puis nous devions ajouter des contraintes rendant le problème plus difficile à résoudre.
+
+Une instance du problème de tournées des techniciens est un ensemble de points, parmi lesquels on trouve un entrepôt et des clients. Chaque client a une demande à satisfaire. Des véhicules vont donc partir de l'entrepôt et livrer la demande de chacun des clients puis retourner à l'entrepôt. Les véhicules ont une capacité limitée, donc il faut que la somme des demandes d'une tournée ne dépasse pas la capacité maximale des véhicules. Le but de ce problème est donc de trouver la tournée de chacun des véhicules de manière à ce que l'ensemble des tournées prennent le moins de temps possibles (il faut minimiser la somme des distances sur chaque tournée).
+
+Ce problème réunit deux problèmes connus, le problème de sac-à-dos multiple (\textit{Bin Packing Problem}) et le problème du voyageur de commerce (\textit{Travelling Salesman Problem}). Ces deux problèmes étant NP-difficiles, le problème de tournées des techniciens est au moins autant difficile à résoudre.
+
+Dans ce rapport, nous expliquons dans un premier temps nos méthodes de résolution pour obtenir de bonnes solutions et des solutions exactes. Puis nous expliquons ensuite comment résoudre le problème si on ajoute de nouvelles contraintes.

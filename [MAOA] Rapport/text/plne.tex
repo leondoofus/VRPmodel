@@ -1,0 +1,19 @@
+\subsection{Résolution exacte par \texttt{PLNE}}
+\label{S resolution exacte par plne}
+Le système d'équations ci-dessous nous permet de modéliser le \texttt{VRP} sans la capacité :
+\[\text{Min} \sum_{(i, j) \in A} c_{ij}x_{ij}\]
+
+\[\begin{cases}
+{\mathlarger\sum_{j=1}^{n}} x_{0j} \leq m \\
+{\mathlarger\sum_{i=1}^{n}} x_{i0} \leq m\\
+{\mathlarger\sum_{j=0}^{n}} x_{ij} \leq m, \forall i \in \mathcal{N}_{\mathcal{C}}\\
+{\mathlarger\sum_{i=0}^{n}} x_{ij} \leq m, \forall j \in \mathcal{N}_{\mathcal{C}}\\
+x_{ij} \in \{0,1\}, \forall (i, j) \in A
+\end{cases}\]
+
+Nous utilisons ensuite \texttt{Cplex} pour résoudre ce système. La solution obtenue est une répartition des clients dans des tournées qui minimise la fonction objectif. Cependant ces tournées ne contiennent pas forcément le dépôt ou dépassent la capacité. Afin de briser ces tournées non réalisables, nous ajoutons, au fur et à mesure, les contraintes suivantes qui nous permettent de supprimer ces tournées non réalisables.
+\[
+\sum_{i \in W} \sum_{j \in \{0, 1, ..., n\} \textbackslash W } x_{ij} \geq {\Bigg\lceil} \dfrac{\sum_{i \in W} d_i}{Q} {\Bigg\rceil} \forall W \subset \{1, ..., n\}, W \neq \emptyset
+\]
+
+A chaque fois que le solveur détecte une solution valide, nous analysons chacune des tournées de cette solution. Si une tournée ne passe pas par le dépôt, cette contrainte est ajoutée et force la tournée à avoir au moins un arc sortant ce qui a pour conséquence de briser le cycle. De plus, si une tournée passe par le dépôt, nous vérifions que la somme des demandes des clients ne dépasse pas la capacité. Si cette somme dépasse la capacité du véhicule cette tournée n'est pas réalisable. Cette contrainte est alors ajoutée et indique le nombre minimum de véhicules pour servir tous les clients de cette tournée.

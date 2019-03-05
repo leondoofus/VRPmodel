@@ -1,0 +1,111 @@
+\subsection{Résolution approchée}
+\label{S resolution approchee}
+
+Nous voyons dans cette partie la résolution des instances de ce problème par des heuristiques. Le but de ces heuristiques est d'obtenir de bonnes solutions proches de la solution optimale et de manière rapide. Ce cas de recherche de solutions s'applique si l'entreprise veut une solution dans l'immédiat. Pour cela, nous avons adopté une stratégie en deux parties. La première partie est de construire une solution réalisable rapidement et la deuxième est d'améliorer la solution obtenue. La première partie ne cherche donc pas une bonne solution, mais seulement une solution réalisable.
+
+\subsubsection{Problème du sac-à-dos multiple}
+\label{sub probleme du sacados}
+
+Nous voyons ici la résolution du problème de sac-à-dos multiple (\textit{Bin Packing}) par une heuristique. Ce problème se résume à devoir résoudre le problème du sac-à-dos avec plusieurs sacs. Donc il faut remplir des sacs ayant une capacité avec des objets qui ont un poids. Le but est de minimiser le nombre de sacs utilisés. Nous avons fait le choix d'utiliser l'algorithme \textit{First Fit Decreasing} pour résoudre ce problème.
+
+Cet algorithme prend en entrée la liste des clients triés dans l'ordre décroissant de leur demande. Il retourne une liste de listes d'entiers qui représente les indices des clients affectés à chaque véhicule. Il parcourt la liste des clients données en entrée, pour chaque client, il cherche à le placer dans la première tournée où il peut le placer. Si le client ne peut pas être placé dans une tournée, alors on crée une nouvelle tournée afin de le placer dans celle-ci. Ci-dessous le pseudo code de l'algorithme:
+
+\begin{algorithm}[H]
+    \label{A First Fit Decreasing}
+    \KwData{clients: la liste des clients dans l'ordre décroissant de leur demande}
+    \KwResult{l: l'affectation des clients à chaque véhicule}
+    initialisation : $l = \emptyset$\\
+    \For{\text{c $\in$ clients}}{
+        \For{\text{t $\in$ l}}{
+            \If{\text{c peut être dans t}}{
+                \text{ajouter c à t}\\
+                \text{continuer}
+            }
+        }
+        \If{\text{c n'a pas été ajouté}}{
+            \text{créer une liste vide t'}\\
+            \text{ajouter c à t'}\\
+            \text{ajouter t' à l}
+        }
+    }
+    \caption{First Fit Decreasing}
+\end{algorithm}
+
+Cet algorithme renvoie la répartition des clients pour chaque véhicule. Il est 2-approché et a une complexité de $O(n \log(n))$ où n est la taille de l'entrée. A la fin de l'exécution de cet algorithme, nous avons la liste des clients de chaque tournée. Nous devons maintenant optimiser l'ordre des clients dans chaque tournée (voir la partie \ref{sub voyageur de commerce}).
+
+\subsubsection{Problème du voyageur de commerce}
+\label{sub voyageur de commerce}
+
+Dans cette sous-partie, nous étudions la résolution du problème du voyageur de commerce (\textit{Travelling Salesman Problem}) par une heuristique. Pour notre problème, il faut résoudre le problème du voyageur de commerce pour chacune des tournées, à savoir trouver un cycle passant par tous les clients de façon à minimiser la somme des distances parcourues. Pour résoudre ce problème, nous avons implémenté l'algorithme \textit{Nearest Insertion}.
+
+Cet algorithme prend en entrée la liste des clients pour chaque tournée (voir partie \ref{sub probleme du sacados}). Il retourne une liste de listes d'entiers qui représente les indices des clients affectés à chaque tournée dans l'ordre dans lequel la tournée doit être effectuée. Voici le pseudo code de l'algorithme:
+
+\begin{algorithm}[H]
+    \label{A Nearest Insertion}
+    \KwData{l: l'affectation des clients à chaque véhicule}
+    \KwResult{l2: la liste des tournées}
+    \For{\text{t $\in$ tournées}}{
+        Choisir un client i le plus proche du dépôt, former la tournée 0-i-0\\
+        Clients de t $\gets$ Client de t \textbackslash \{i\} \\
+        \While{\text{Clients de t} $\neq \emptyset$}{
+        k \in \text{Clients de t} : d(k,t) = $min_{i \in t}$ d(i,t) \\
+        \text{Trouver (i,j)} : $\delta$ f = $c_{ik}$ + $c_{kj}$ - $c_{ij}$ \text{soit minimal}\\
+        \text{Insérer k entre i et j}\\
+        \text{Clients de t} \gets \text{Clients de t} \textbackslash \{k\}\\
+        }
+    }
+    \caption{Nearest Insertion}
+\end{algorithm}
+
+Cet algorithme renvoie la liste des tournées. Il est 2-approché pour chaque véhicule et a une complexité de $O(n^2)$ où n est le nombre de clients par tournée. La solution retournée est loin de la solution optimale. Comme évoqué dans l'introduction de la partie \ref{S resolution approchee}, nous cherchons une solution réalisable rapidement afin de partir de celle-ci pour en trouver une meilleure. Dans ce but, nous utilisons un algorithme de recuit simulé (voir partie \ref{sub recuit simule}).
+
+\subsubsection{Recherche locale}
+\label{sub recherche locale}
+Pour améliorer les tournées, nous appliquons ensuite une recherche locale avec une liste de tabou. Le but de la recherche locale est de réduire le coût de chaque tournée en y permutant deux clients. Nous gardons en mémoire une liste de tabou pour éviter d'être bloqué dans un optimum local.
+
+
+\subsubsection{Amélioration par recuit simulé}
+\label{sub recuit simule}
+A la fin des algorithmes évoqués dans les parties \ref{sub probleme du sacados} et \ref{sub voyageur de commerce}, nous obtenons une solution réalisable. Cette solution étant très loin de la solution optimale, il nous faut l'améliorer. Pour cela, nous avons implémenté un algorithme de recuit simulé.
+
+Cet algorithme prend en entrée une solution réalisable et retourne une solution réalisable et proche de la solution optimale. Voici les arguments de cet algorithme:
+
+\begin{itemize}
+    \item $k_{max}$ : Le nombre d'itérations maximal que l'algorithme va faire, elle vaut $2000$ dans notre méthode
+    \item T : la température initiale de l'algorithme, elle vaut $1000$ dans notre méthode
+    \item $\alpha$ : le coefficient de mise-à-jour de la température, à chaque itération: $T \gets T \times \alpha$
+    \item $energy_{min}$ : l'énergie minimale de la solution trouvée, si l'algorithme trouve une solution en dessous de $energy_{min}$, alors il s'arrête
+\end{itemize}\\
+
+L'algorithme de recuit simulé prend la solution courante, et si le nombre $k$ d'itérations est inférieur à $k_{max}$, alors il va chercher le voisin de la solution courante. Pour trouver le voisin, on change un client de tournée, on fait une permutation de deux clients dans une même tournée, on ajoute une tournée ou on supprime une tournée vide. Ces façons de trouver un voisin sont tirés aléatoirement avec respectivement $1/3$, $1/3$, $1/6$ et $1/6$ de chance d'être pris. Ensuite l'algorithme compare les énergies des solutions. L'énergie est calculée de la manière suivante:
+
+\begin{equation}
+\label{equation energie}
+    \sum_{t \in tournees} distance_t + 100 \times \max \{0, (\#tournee - m)\}
+\end{equation}
+
+Si l'énergie du voisin est meilleure (plus basse), alors on remplace la solution courante par le voisin. Sinon on remplace la solution courante par le voisin avec une probabilité de $\exp(\delta energy / T)$ où $\delta energy$ est la différence entre l'énergie du voisin et l'énergie de la solution courante. De plus, on garde en mémoire la meilleure solution rencontrée, c'est cette solution qui sera retournée. Voici le pseudo code de l'algorithme:
+
+\begin{algorithm}[H]
+    \label{A Simulated Annealing}
+    \KwData{s: la solution à améliorer}
+    \KwResult{s': la meilleure solution rencontrée}
+    \text{initialisation : k = 0 et $energy_{s}$ = energy(s)}\\
+    \While{\text{k < $k_{max}$ ou $energy_s$ < $energy_{min}$}}{
+        \text{sn $\gets$ voisin(s) et $energy_{sn}$ = energy(sn)}\\
+        \text{p est tiré aléatoirement entre 0 et 1}\\
+        \If{\text{$energy_{sn}$ < $energy_{s}$ ou p < $\exp(\delta energy / T)$}}{
+            \text{s $\gets$ sn}\\
+            \text{$energy_{s}$ $\gets$ $energy_{sn}$}
+        }
+        \If{\text{$energy_{sn}$ < $energy_{s'}$}}{
+            \text{s' $\gets$ sn}\\
+            \text{$energy_{s'}$ $\gets$ $energy_{sn}$}
+        }
+        \text{k $\gets$ k + 1}\\
+        \text{T $\gets$ T $\times$ $\alpha$ }
+    }
+    \caption{Simulated Annealing}
+\end{algorithm}
+
+A la suite de l'exécution de cet algorithme, nous obtenons une solution proche de la solution optimale. Nous avons donc une bonne solution obtenue rapidement à la suite des trois algorithmes décrit dans les parties \ref{sub probleme du sacados}, \ref{sub voyageur de commerce} et \ref{sub recuit simule}. Par exemple, nous obtenons, pour l'instance \texttt{A-n32-k5}, une solution autour de 1800 à la suite des algorithmes des parties \ref{sub probleme du sacados} et \ref{sub voyageur de commerce}, alors que l'on trouve une solution proche de 900 après l'algorithme de recuit simulé. La solution optimale de l'instance \texttt{A-n32-k5} est à 787 (voir la partie \ref{result}).

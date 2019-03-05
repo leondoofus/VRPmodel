@@ -1,0 +1,9 @@
+Dans cette partie, nous souhaitons rendre le problème plus proche de la réalité. C'est la raison pour laquelle nous ajoutons des contraintes supplémentaires.
+
+\subsection{Ajout du temps de travail}
+\label{S ajout du temps de travail}
+Dans un premier temps, nous avons ajouté des contraintes sur le temps de travail. De ce fait, nous limitons le temps de travail de chaque technicien et nous pénalisons le temps de travail supplémentaire dans la fonction objectif.
+
+De ce fait, nous définissons un temps de travail maximal $d_{max} = \dfrac{1.5\sum_{j=1}^{n} c_{0j}}{m}$ pour chaque technicien. Pour chaque tournée, nous ajoutons dans la fonction objectif un terme qui est égale à $max(c_{tournée} - d_{max}, 0)$.
+
+Nous remarquons que l'ajout de cet aspect est équivalent au problème initial, sauf que la fonction objectif est modifiée. La résolution du problème avec cette nouvelle contrainte n'est donc pas intéressante. Donc, nous ne l'avons pas étudiée en profondeur.
